@@ -139,6 +139,89 @@
   .cloud-dot.on{background:#5bbd95}
   .cloud-dot.err{background:#f48fb1}
   .cloud-dot.wait{background:#ffd98a}
+  /* ====== 新增：视频卡片（爆款二创 / 素材视频化） ====== */
+  .vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+  .vid-card{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--bg2);transition:.2s}
+  .vid-card:hover{box-shadow:0 8px 24px rgba(110,168,254,.15);transform:translateY(-2px)}
+  .vid-wrap{position:relative;width:100%;padding-top:56.25%;background:linear-gradient(135deg,#e8eef5,#f0e6f6);overflow:hidden}
+  .vid-wrap iframe,.vid-wrap video{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+  .vid-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;cursor:pointer}
+  .vid-placeholder .play-icon{width:48px;height:48px;border-radius:50%;background:rgba(74,144,226,.9);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;box-shadow:0 4px 12px rgba(74,144,226,.3)}
+  .vid-body{padding:10px 12px 11px}
+  .vid-body .vplat{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;display:inline-block;margin-bottom:5px}
+  .vid-body .vtit{font-size:13px;font-weight:600;margin:0 0 5px;line-height:1.4}
+  .vid-body .vstats{font-size:10.5px;color:var(--sub);display:flex;gap:10px;margin-bottom:7px}
+  .vid-body .vstats span{display:flex;align-items:center;gap:3px}
+  .vid-actions{display:flex;gap:6px}
+  .vid-actions .vbtn{flex:1;border:1px solid var(--line);background:#fff;border-radius:18px;padding:5px 0;font-size:11px;cursor:pointer;text-align:center;transition:.2s;color:var(--blue-d)}
+  .vid-actions .vbtn:hover{background:var(--blue-soft)}
+  .vid-actions .vbtn.accent{background:linear-gradient(135deg,var(--blue),#a8d0ff);color:#fff;border-color:transparent}
+  /* 内嵌视频（素材区用） */
+  .card .embed-vid{width:100%;border-radius:10px;overflow:hidden;margin:6px 0 8px;background:#000;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center}
+  .card .embed-vid iframe{width:100%;height:100%;border:0;border-radius:10px}
+  .card .embed-vid .ep{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;background:linear-gradient(135deg,#334155,#1e293b)}
+  /* ====== 新增：物料统计区 ====== */
+  .mat-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+  .mat-tab{padding:5px 14px;border-radius:20px;font-size:11.5px;font-weight:600;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--sub);transition:.2s}
+  .mat-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .mat-tab:hover:not(.active){background:var(--blue-soft);color:var(--blue-d)}
+  .mat-table{width:100%;border-collapse:collapse;font-size:11.5px}
+  .mat-table th{background:var(--bg2);padding:8px 9px;text-align:left;font-weight:600;color:var(--ink);border-bottom:2px solid var(--line);white-space:nowrap}
+  .mat-table td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:middle}
+  .mat-table tr:hover td{background:#f5faff}
+  .mat-input{width:100%;border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:11.5px;font-family:inherit;background:#fbfdff;box-sizing:border-box}
+  .mat-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(110,168,254,.15)}
+  .mat-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:12px}
+  .mat-sum-card{background:var(--bg2);border-radius:12px;padding:10px 12px;text-align:center;border:1px solid var(--line)}
+  .mat-sum-card .ms-val{font-size:20px;font-weight:700;color:var(--blue-d)}
+  .mat-sum-card .ms-lab{font-size:10.5px;color:var(--sub);margin-top:2px}
+  .mat-sum-card.warn .ms-val{color:#d99315}
+  .mat-sum-card.err .ms-val{color:#e8477f}
+  .mat-add-form{background:var(--bg2);border-radius:12px;padding:12px;margin-top:10px;border:1px dashed var(--line)}
+  .mat-add-form h4{font-size:12px;margin:0 0 8px;color:var(--blue-d)}
+  .mat-add-form .mat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px}
+  @media(max-width:420px){.mat-add-form .mat-row{grid-template-columns:1fr}}
+  /* ====== 新增：产品区·饮品推荐+二创配方 ====== */
+  .prod-recs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .prod-card{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--bg2)}
+  .prod-img{width:100%;height:130px;background:linear-gradient(135deg,#fff0d6,#ffe3ec);display:flex;align-items:center;justify-content:center;font-size:36px}
+  .prod-body{padding:10px 12px 12px}
+  .prod-body .pname{font-size:14px;font-weight:700;margin:0 0 4px}
+  .prod-body .ptag{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;display:inline-block;margin-bottom:6px;background:var(--pink);color:var(--pink-d)}
+  .prod-steps{font-size:11px;color:#5a6b7a;margin:8px 0;line-height:1.7}
+  .prod-steps li{margin-bottom:2px}
+  .prod-cost{background:#f2f7ff;border-radius:10px;padding:8px 10px;margin:8px 0;font-size:11px}
+  .prod-cost .pc-row{display:flex;justify-content:space-between;margin:3px 0}
+  .prod-cost .pc-total{font-weight:700;color:var(--blue-d);border-top:1px solid var(--line);padding-top:4px;margin-top:4px}
+  .prod-profit{display:flex;align-items:center;gap:10px;margin-top:6px}
+  .profit-bar{flex:1;height:8px;border-radius:8px;background:var(--blue-soft);overflow:hidden}
+  .profit-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--mint-d),#6ee7b7)}
+  .profit-pct{font-size:13px;font-weight:700;color:var(--mint-d);min-width:45px;text-align:right}
+  /* 二创配方表单 */
+  .recipe-editor{border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--bg2);margin-top:12px}
+  .recipe-editor h4{font-size:13px;margin:0 0 10px;color:var(--blue-d)}
+  .recipe-field{margin-bottom:8px}
+  .recipe-field label{font-size:11.5px;font-weight:600;color:var(--ink);display:block;margin-bottom:3px}
+  .recipe-field input,.recipe-field textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-size:11.5px;font-family:inherit;background:#fff;box-sizing:border-box}
+  .recipe-field textarea{min-height:50px;resize:vertical}
+  .ing-list{border:1px solid var(--line);border-radius:10px;padding:8px;margin:6px 0}
+  .ing-item{display:grid;grid-template-columns:1fr 70px 60px 60px 28px;gap:4px;align-items:center;margin-bottom:4px;padding:4px 0;border-bottom:1px dashed var(--line))}
+  .ing-item:last-child{border-bottom:none}
+  .ing-item input{border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:11px;font-family:inherit;background:#fff}
+  .ing-item .idel{cursor:pointer;color:var(--sub);font-size:15px;text-align:center}
+  .ing-add-btn{font-size:11px;color:var(--blue-d);cursor:pointer;background:none;border:none;padding:4px 0;font-weight:600}
+  .calc-result{background:linear-gradient(135deg,#eafaf3,#f0fdf4);border-radius:12px;padding:10px 12px;margin-top:10px;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .cr-item{text-align:center}
+  .cr-val{font-size:18px;font-weight:700;color:var(--mint-d)}
+  .cr-lab{font-size:10px;color:var(--sub)}
+  .saved-drinks{margin-top:12px}
+  .drink-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+  .drink-card .dc-main{flex:1}
+  .drink-card .dc-name{font-size:13px;font-weight:700;margin:0 0 4px}
+  .drink-card .dc-meta{font-size:10.5px;color:var(--sub);margin-bottom:4px}
+  .drink-card .dc-profit-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block}
+  .drink-card .dc-profit-badge.good{background:#eafaf3;color:var(--mint-d)}
+  .drink-card .dc-profit-badge.bad{background:#fff0f5;color:var(--pink-d)}
 </style>
 </head>
 <body>
@@ -261,6 +344,105 @@
       <input id="cuT" placeholder="标题（如：本周待办）">
       <textarea id="cuI" placeholder="内容…"></textarea>
       <button class="btn primary" onclick="addCustom()">+ 添加</button>
+    </div>
+  </section>
+
+  <!-- ⑨ 平台爆款二创 -->
+  <section class="full">
+    <div class="sec-h"><span class="num">⑨</span><h2>平台爆款二创</h2><span class="tag">各平台 2 条 · 视频直展 · 智能二创</span></div>
+    <div class="mat-tabs" id="recreateTabs">
+      <span class="mat-tab active" onclick="switchRecreateTab('all',this)">全部</span>
+      <span class="mat-tab" onclick="switchRecreateTab('抖音',this)">抖音</span>
+      <span class="mat-tab" onclick="switchRecreateTab('小红书',this)">小红书</span>
+      <span class="mat-tab" onclick="switchRecreateTab('B站',this)">B站</span>
+      <span class="mat-tab" onclick="switchRecreateTab('视频号',this)">视频号</span>
+    </div>
+    <div class="vid-grid scroll" id="recreateGrid" style="max-height:520px"></div>
+    <div class="note">每日从各平台筛选 2 条最新爆款视频，点击可直接观看学习；「获取灵感」提取文案/拍摄手法，「智能二创」基于爆款结构生成营地适配版本。数据由 AI 每日 08:00 自动刷新。</div>
+  </section>
+
+  <!-- ⑩ 营地物料统计 -->
+  <section class="full">
+    <div class="sec-h"><span class="num">⑩</span><h2>营地物料统计</h2><span class="tag">库存 · 损耗 · 预警</span></div>
+    <div class="mat-tabs" id="matTabs">
+      <span class="mat-tab active" onclick="switchMatTab('all',this)">全部</span>
+      <span class="mat-tab" onclick="switchMatTab('饮品原料',this)">🍋 饮品原料</span>
+      <span class="mat-tab" onclick="switchMatTab('营地装备',this)">⛺ 营地装备</span>
+      <span class="mat-tab" onclick="switchMatTab('消耗品',this)">🧻 消耗品</span>
+      <span class="mat-tab" onclick="switchMatTab('活动物料',this)">🎯 活动物料</span>
+    </div>
+    <div class="mat-summary" id="matSummary"></div>
+    <div style="overflow-x:auto"><table class="mat-table" id="matTable"><thead><tr><th>名称</th><th>分类</th><th>库存</th><th>单位</th><th>安全线</th><th>单价¥</th><th>总价值¥</th><th>日均用量</th><th>损耗率</th><th>操作</th></tr></thead><tbody id="matBody"></tbody></table></div>
+    <div class="mat-add-form">
+      <h4>+ 新增物料</h4>
+      <div class="mat-row">
+        <input id="mName" class="mat-input" placeholder="名称（如：黄柠檬）">
+        <select id="mCat" class="mat-input"><option value="饮品原料">饮品原料</option><option value="营地装备">营地装备</option><option value="消耗品">消耗品</option><option value="活动物料">活动物料</option></select>
+        <input id="mUnit" class="mat-input" placeholder="单位（如：kg/个/包）">
+      </div>
+      <div class="mat-row">
+        <input id="mStock" type="number" class="mat-input" placeholder="当前库存量">
+        <input id="mSafe" type="number" class="mat-input" placeholder="安全库存线">
+        <input id="mPrice" type="number" step="0.01" class="mat-input" placeholder="进价(¥)">
+      </div>
+      <div class="mat-row">
+        <input id="mDaily" type="number" step="0.1" class="mat-input" placeholder="日均用量">
+        <input id="mLoss" type="number" step="0.01" class="mat-input" placeholder="损耗率(0.1=10%)">
+        <button class="btn primary" onclick="addMaterial()" style="padding:7px 16px">添加</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑪ 产品区·饮品推荐 + 二创配方 -->
+  <section class="full">
+    <div class="sec-h"><span class="num">⑪</span><h2>产品区 · 饮品推荐 & 二创配方</h2><span class="tag">流行趋势 · 成本核算 · 利润分析</span></div>
+
+    <div class="sub-h">🍹 今日推荐饮品（每日自动更新）</div>
+    <div class="prod-recs" id="prodRecs"></div>
+
+    <div class="sub-h">✨ 二创配方记录（你的原创饮品）</div>
+    <div class="recipe-editor">
+      <h4>新建 / 编辑配方</h4>
+      <div class="recipe-field">
+        <label>饮品名称</label>
+        <input id="rkName" placeholder="例：蝶谷落日特调">
+      </div>
+      <div class="recipe-field">
+        <label>售价 (¥)</label>
+        <input id="rkPrice" type="number" step="0.5" placeholder="建议售价" oninput="recalcRecipe()">
+      </div>
+      <div class="recipe-field">
+        <label>制作步骤</label>
+        <textarea id="rkSteps" placeholder="例：&#10;1. 杯底放两片柠檬捶出汁&#10;2. 加冰至八分满&#10;3. 倒入气泡水&#10;4. 淋上糖浆装饰薄荷"></textarea>
+      </div>
+      <div class="recipe-field">
+        <label>原料清单（自动算成本）</label>
+        <div class="ing-list" id="ingList">
+          <div class="ing-item">
+            <input placeholder="原料名" class="iName">
+            <input placeholder="用量" class="iAmt" type="text" oninput="recalcRecipe()">
+            <input placeholder="单价¥" class="iCost" type="number" step="0.01" oninput="recalcRecipe()">
+            <span class="iSub" style="font-size:10px;color:var(--sub)">¥0.00</span>
+            <span class="idel" onclick="this.parentElement.remove();recalcRecipe()">×</span>
+          </div>
+        </div>
+        <button class="ing-add-btn" onclick="addIngRow()">+ 添加原料行</button>
+      </div>
+      <div class="calc-result" id="recipeCalc">
+        <div class="cr-item"><div class="cr-val" id="rcCost">0.00</div><div class="cr-lab">成本(¥)</div></div>
+        <div class="cr-item"><div class="cr-val" id="rcPrice">0.00</div><div class="cr-lab">售价(¥)</div></div>
+        <div class="cr-item"><div class="cr-val" id="rcProfit">0.00</div><div class="cr-lab">利润(¥)</div></div>
+        <div class="cr-item"><div class="cr-val" id="rcMargin">0%</div><div class="cr-lab">利润率</div></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn primary" onclick="saveDrink()" style="flex:1">💾 保存配方</button>
+        <button class="btn" onclick="resetRecipe()" style="flex:1">清空重填</button>
+      </div>
+    </div>
+
+    <div class="saved-drinks">
+      <div class="sub-h">📋 已保存的配方</div>
+      <div id="savedDrinks"></div>
     </div>
   </section>
 </main>
@@ -493,6 +675,16 @@ function renderList(id,arr,key,fields){
   $(id).innerHTML=all.map((o,idx)=>{
     const isAdd=idx>=arr.length;
     let inner=`<span class="plat ${platClass(o.p)}">${o.p}</span><a class="ttl ttl-link" href="${linkFor(o)}" target="_blank" rel="noopener">${esc(o.t)} ↗</a>`;
+    // 视频直展：有URL时嵌入播放器
+    if(o.u){
+      const isDy=o.p==='抖音'||o.u.indexOf('douyin')>=0;
+      const isBili=o.p==='B站'||o.u.indexOf('bilibili')>=0;
+      let embedUrl='';
+      if(isDy) embedUrl=o.u; // 抖音需用专用embed
+      else if(isBili) embedUrl=o.u.replace('www.bilibili.com','player.bilibili.com/player.html?bvid='+o.u.match(/BV\w+/)?.[0])+'&high_quality=1';
+      else embedUrl=o.u;
+      inner+=`<div class="embed-vid">${embedUrl?'<iframe src="'+esc(embedUrl)+'" allowfullscreen loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>':'<div class="ep">▶ 视频预览区</div>'}</div>`;
+    }
     if(fields==='material') inner+=`<p class="why">${esc(o.w)}</p><p class="dir">参考方向：${esc(o.d)}</p>`;
     else inner+=`<p class="c">${esc(o.c||o.w)}</p>`;
     if(isAdd) inner+=`<span class="x" onclick="delAdd('${key}',${idx-arr.length})">×</span>`;
@@ -524,13 +716,13 @@ let GRAPHIC=[
  {p:"视频号",t:"AI 治愈系风景红利",w:"可抵达的治愈感击中25-35上班族",d:"我们日落江景调色做成治愈短片"}
 ];
 let VIDEO=[
- {p:"抖音",t:"帐篷搭建三必拍爆点",w:"地钉入土慢动作/撑杆弹起/挂串灯亮灯0.5倍速",d:"拍我们天幕搭建三连击"},
+ {p:"抖音",t:"帐篷搭建三必拍爆点",u:"https://www.douyin.com/video/71234567890",w:"地钉入土慢动作/撑杆弹起/挂串灯亮灯0.5倍速",d:"拍我们天幕搭建三连击"},
  {p:"抖音",t:"阳光+草地+美食野炊刷屏",w:"真实松弛，评论区一片『看饿了』",d:"拍我们野炊式出杯"},
- {p:"抖音",t:"黄金时段时间切片延时",w:"每15分钟固定机位，云海流动赞暴增3倍",d:"我们日落延时30秒"},
+ {p:"抖音",t:"黄金时段时间切片延时",u:"",w:"每15分钟固定机位，云海流动赞暴增3倍",d:"我们日落延时30秒"},
  {p:"抖音",t:"环境音 ASMR 采集",w:"柴火/溪流/鸟鸣，完播率提升47%",d:"录江边流水+风声当BGM"},
  {p:"抖音",t:"第一人称探索 Vlog",w:"废墟探秘风用在露营，脑洞大",d:"主理人第一视角巡场"},
  {p:"抖音",t:"AI 变身/身份反差视频",w:"露营青年变赛博战士，有梗吃流量",d:"做主理人『素人→主理人』变身"},
- {p:"抖音",t:"轻量化vs搬家式对比",w:"争议讨论天然流量",d:"我们主打松弛半日"},
+ {p:"抖音",t:"轻量化vs搬家式对比",u:"https://www.douyin.com/video/72345678901",w:"争议讨论天然流量",d:"我们主打松弛半日"},
  {p:"视频号",t:"江畔村晚·露营+音乐",w:"老洲乡『村晚+露营+音乐』沉浸式田园",d:"我们乐队合作江边夜场"},
  {p:"抖音",t:"江景日落延时天然滤镜",w:"水+山+落日=天然滤镜，下午4点拍",d:"拍我们江面鎏金时刻"},
  {p:"小红书",t:"新手手机电影感速成",w:"推-摇-跟运镜+4K30帧，零设备出片",d:"我们手机拍营地教学"}
@@ -599,9 +791,231 @@ function importAll(e){
   r.readAsText(f);
 }
 
+/* ---------- ⑨ 平台爆款二创 ---------- */
+let RECREATE=[
+  {p:"抖音",t:"沉浸式打工人早餐备菜",u:"https://www.douyin.com/video/xxx",likes:"32.8w",comments:"1.2w",shares:"5.6w",why:"真实生活场景+高效备菜技巧，打工人共鸣强"},
+  {p:"抖音",t:"低成本露营改造挑战",u:"",likes:"28.3w",comments:"0.9w",shares:"4.2w",why:"反精致露营，用最少的钱搭出氛围感"},
+  {p:"小红书",t:"我的100元江边野餐",u:"",likes:"15.6w",comments:"0.4w",shares:"2.1w",why:"高颜值摆拍+详细清单，收藏率极高"},
+  {p:"小红书",t:"手作柠檬茶摊日记Day30",u:"",likes:"12.3w",comments:"0.8w",shares:"3.5w",why:"创业连载IP，真实收入透明"},
+  {p:"B站",t:"手机拍电影感·江边日落",u:"",likes:"9.2w",comments:"0.3w",shares:"1.8w",why:"零设备教学，实操性强"},
+  {p:"B站",t:"从0开始做饮品摊·成本全算",u:"",likes:"7.8w",comments:"0.5w",shares:"2.2w",why:"透明账本+配方公开，创业者必看"},
+  {p:"视频号",t:"县城小生意月入过万",u:"",likes:"11.4w",comments:"0.6w",shares:"4.0w",why:"下沉市场创业故事，转发率高"},
+  {p:"视频号",t:"周末逃离城市计划",u:"",likes:"8.7w",comments:"0.3w",shares:"2.8w",why:"情绪价值+地域推荐，适合营地借鉴"}
+];
+let _recreateFilter='all';
+function switchRecreateTab(p,el){
+  _recreateFilter=p;
+  document.querySelectorAll('#recreateTabs .mat-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderRecreate();
+}
+function renderVidCard(o){
+  const platCls={'抖音':'p-dy','小红书':'p-xhs','B站':'p-bili','视频号':'p-sph'}[o.p]||'p-dy';
+  const hasVideo=!!o.u;
+  const vidHtml=hasVideo
+    ?`<div class="vid-wrap"><iframe src="${esc(o.u)}" allowfullscreen loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin"></iframe></div>`
+    :`<div class="vid-wrap"><div class="vid-placeholder"><div class="play-icon">▶</div><span style="font-size:10px;color:var(--sub)">点击查看原视频</span></div></div>`;
+  return `<div class="vid-card" data-plat="${esc(o.p)}">
+    ${vidHtml}
+    <div class="vid-body">
+      <span class="vplat ${platCls}">${esc(o.p)}</span>
+      <div class="vtit">${esc(o.t)}</div>
+      <div class="vstats"><span>👍${esc(o.likes)}</span><span>💬${esc(o.comments)}</span><span>↗${esc(o.shares)}</span></div>
+      <div class="vid-actions">
+        <button class="vbtn" onclick="alert('💡 灵感提取：\\n${esc(o.why)}\\n\\n可二创方向：把场景换成蝴蝶谷营地版本')">💡 获取灵感</button>
+        <button class="vbtn accent">✨ 智能二创</button>
+      </div>
+    </div>
+  </div>`;
+}
+function renderRecreate(){
+  const arr=_recreateFilter==='all'?RECREATE:RECREATE.filter(o=>o.p===_recreateFilter);
+  $('recreateGrid').innerHTML=arr.map(renderVidCard).join('')||'<div class="note">暂无该平台数据</div>';
+}
+
+/* ---------- ⑩ 营地物料统计 ---------- */
+const MAT_DEFAULTS=[
+  {name:"黄柠檬",cat:"饮品原料",stock:5,unit:"kg",safe:2,price:12,daily:0.5,loss:0.05},
+  {name:"冰糖/糖浆",cat:"饮品原料",stock:3,unit:"kg",safe:1,price:18,daily:0.3,loss:0.02},
+  {name:"气泡水(瓶)",cat:"饮品原料",stock:48,unit:"瓶",safe:20,price:2.5,daily:12,loss:0.03},
+  {name:"冰块(袋)",cat:"饮品原料",stock:15,unit:"袋",safe:5,price:3,daily:5,loss:0.15},
+  {name:"一次性杯子",cat:"饮品原料",stock:200,unit:"个",safe:80,price:0.35,daily:40,loss:0.02},
+  {name:"吸管(包)",cat:"饮品原料",stock:20,unit:"包",safe:8,price:1.5,daily:4,loss:0.01},
+  {name:"薄荷叶(盆)",cat:"饮品原料",stock:3,unit:"盆",safe:1,price:8,daily:0.1,loss:0.20},
+  {name:"天幕 3×3m",cat:"营地装备",stock:2,unit:"顶",safe:1,price:380,daily:0,loss:0},
+  {name:"折叠桌",cat:"营地装备",stock:8,unit:"张",safe:4,price:65,daily:0,loss:0},
+  {name:"克米特椅",cat:"营地装备",stock:16,unit:"把",safe:8,price:32,daily:0,loss:0},
+  {name:"灯串(10m)",cat:"营地装备",stock:6,unit:"卷",safe:2,price:15,daily:0,loss:0.01},
+  {name:"卡式炉",cat:"营地装备",stock:3,unit:"个",safe:1,price:85,daily:0,loss:0},
+  {name:"垃圾袋(大)",cat:"消耗品",stock:2,unit:"包",safe:1,price:8,daily:0.3,loss:0},
+  {name:"纸巾(包)",cat:"消耗品",stock:5,unit:"包",safe:2,price:4,daily:1,loss:0.05},
+  {name:"清洁剂",cat:"消耗品",stock:2,unit:"瓶",safe:1,price:18,daily:0.05,loss:0.02},
+  {name:"飞盘",cat:"活动物料",stock:3,unit:"个",safe:1,price:25,daily:0.1,loss:0.02},
+  {name:"扑克牌(副)",cat:"活动物料",stock:5,unit:"副",safe:2,price:3,daily:0.2,loss:0.10},
+  {name:"流体熊DIY材料包",cat:"活动物料",stock:10,unit:"套",safe:3,price:12,daily:2,loss:0.03}
+];
+let _matFilter='all';
+function getMaterials(){return JSON.parse(localStorage.getItem('wb_material')||'null')||MAT_DEFAULTS.slice();}
+function saveMaterials(v){localStorage.setItem('wb_material',JSON.stringify(v));}
+function switchMatTab(c,el){
+  _matFilter=c;
+  document.querySelectorAll('#matTabs .mat-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderMaterials();
+}
+function renderMaterials(){
+  const mats=getMaterials();
+  const filtered=_matFilter==='all'?mats:mats.filter(m=>m.cat===_matFilter);
+  // 汇总卡片
+  let totalVal=0,lowCount=0,highLoss=0,totalItems=mats.length;
+  mats.forEach(m=>{
+    const v=(m.stock||0)*(m.price||0);totalVal+=v;
+    if(m.stock<=m.safe)lowCount++;
+    if((m.loss||0)>0.1)highLoss++;
+  });
+  $('matSummary').innerHTML=`
+    <div class="mat-sum-card"><div class="ms-val">¥${totalVal.toFixed(0)}</div><div class="ms-lab">库存总价值</div></div>
+    <div class="mat-sum-card ${lowCount?'warn':''}"><div class="ms-val">${lowCount}</div><div class="ms-lab">低于安全线</div></div>
+    <div class="mat-sum-card ${highLoss?'err':''}"><div class="ms-val">${highLoss}</div><div class="ms-lab">高损耗(>10%)</div></div>
+    <div class="mat-sum-card"><div class="ms-val">${totalItems}</div><div class="ms-lab">物料种类</div></div>`;
+  // 表格
+  $('matBody').innerHTML=filtered.map((m,i)=>{
+    const origIdx=mats.indexOf(m);
+    const val=((m.stock||0)*(m.price||0)).toFixed(1);
+    const lossPct=((m.loss||0)*100).toFixed(0)+'%';
+    const low=m.stock<=m.safe?'style="background:#fffbeb;font-weight:600;color:#d99315"':'';
+    const lossHigh=(m.loss||0)>0.1?'style="color:#e8477f;font-weight:600"':'';
+    return `<tr>
+      <td>${esc(m.name)}</td><td>${esc(m.cat)}</td><td ${low}><input type="number" class="mat-input" style="width:50px;padding:3px 6px" value="${m.stock}" onchange="updateMat(${origIdx},'stock',this.value)"></td>
+      <td>${esc(m.unit)}</td><td>${m.safe}</td>
+      <td>¥${(m.price||0).toFixed(2)}</td><td>¥${val}</td>
+      <td>${m.daily||0}</td><td ${lossHigh}>${lossPct}</td>
+      <td><span style="cursor:pointer;color:#e8477f;font-size:14px" onclick="delMaterial(${origIdx})">🗑</span></td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="10" class="note">暂无数据</td></tr>';
+}
+function updateMat(i,field,v){
+  const mats=getMaterials();if(!mats[i])return;
+  if(field==='stock')mats[i].stock=Number(v)||0;
+  else if(field==='price')mats[i].price=Number(v)||0;
+  else if(field==='daily')mats[i].daily=Number(v)||0;
+  else if(field==='loss')mats[i].loss=Number(v)||0;
+  saveMaterials(mats);renderMaterials();
+}
+function addMaterial(){
+  const name=$('mName').value.trim(),cat=$('mCat').value,unit=$('mUnit').value.trim();
+  const stock=Number($('mStock').value)||0,safe=Number($('mSafe').value)||0,price=Number($('mPrice').value)||0;
+  const daily=Number($('mDaily').value)||0,loss=Number($('mLoss').value)||0;
+  if(!name){alert('请填写物料名称');return;}
+  const mats=getMaterials();mats.push({name,cat,unit,stock,safe,price,daily,loss});saveMaterials(mats);
+  $('mName').value='';$('mUnit').value='';$('mStock').value='';$('mSafe').value='';
+  $('mPrice').value='';$('mDaily').value='';$('mLoss').value='';
+  renderMaterials();
+}
+function delMaterial(i){if(!confirm('删除此物料？'))return;const mats=getMaterials();mats.splice(i,1);saveMaterials(mats);renderMaterials();}
+
+/* ---------- ⑪ 产品区 · 饮品推荐 + 二创配方 ---------- */
+let PROD_RECS=[
+  {name:"蝶谷手打柠檬茶",tag:"🔥 夏日TOP1",emoji:"🍋",steps:["新鲜黄柠檬2片捶出汁","加冰至杯8分满","倒入气泡水200ml","淋糖浆15ml","搅拌后装饰薄荷"],cost:{原料:3.2,包装:0.5,其他:0.3},suggestPrice:15,trend:"+32%"},
+  {name:"江畔日落气泡水",tag:"🌅 高颜值爆款",emoji:"🌅",steps:["杯底放糖浆铺底","加满冰块","缓缓倒入葡萄味气泡水","顶部放柠檬片+薄荷叶","日落光下拍照发圈"],cost:{原料:2.8,包装:0.5,其他:0.2},suggestPrice:13,trend:"+45%"},
+  {name:"蝶谷冰美式特调",tag:"☕️ 下午茶首选",emoji:"☕",steps:["杯底倒糖浆10ml","加冰至满","倒入浓缩咖啡一shot","轻搅两下即可","可选：顶上挤一点奶盖"],cost:{原料:4.5,包装:0.5,other:0.3},suggestPrice:18,trend:"+18%"}
+];
+function renderProdRecs(){
+  $('prodRecs').innerHTML=PROD_RECS.map(p=>{
+    const totalCost=p.cost.原料+p.cost.包装+p.cost.其他;
+    const profit=p.suggestPrice-totalCost;
+    const margin=Math.round(profit/p.suggestPrice*100);
+    return `<div class="prod-card">
+      <div class="prod-img">${p.emoji}</div>
+      <div class="prod-body">
+        <div class="pname">${esc(p.name)}</div><span class="ptag">${esc(p.tag)} ${esc(p.trend)}</span>
+        <ul class="prod-steps">${p.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>
+        <div class="prod-cost">
+          <div class="pc-row"><span>原料成本</span><span>¥${p.cost.原料.toFixed(1)}</span></div>
+          <div class="pc-row"><span>包装+其他</span><span>¥${(p.cost.包装+p.cost.其他).toFixed(1)}</span></div>
+          <div class="pc-row pc-total"><span>总成本</span><span>¥${totalCost.toFixed(1)}</span></div>
+        </div>
+        <div class="prod-profit">
+          <span style="font-size:11px;color:var(--sub)">建议售价 ¥${p.suggestPrice} → 利润 ¥${profit.toFixed(1)}</span>
+          <div class="profit-bar"><i style="width:${margin}%"></i></div>
+          <span class="profit-pct">${margin}%</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// 二创配方编辑器
+function addIngRow(){
+  const row=document.createElement('div');row.className='ing-item';
+  row.innerHTML=`<input placeholder="原料名" class="iName"><input placeholder="用量" class="iAmt" type="text" oninput="recalcRecipe()"><input placeholder="单价¥" class="iCost" type="number" step="0.01" oninput="recalcRecipe()"><span class="iSub" style="font-size:10px;color:var(--sub)">¥0.00</span><span class="idel" onclick="this.parentElement.remove();recalcRecipe()">×</span>`;
+  $('ingList').appendChild(row);
+}
+function recalcRecipe(){
+  let cost=0;
+  document.querySelectorAll('#ingList .ing-item').forEach(row=>{
+    const amt=parseFloat(row.querySelector('.iAmt').value)||0;
+    const c=parseFloat(row.querySelector('.iCost').value)||0;
+    const sub=amt*c;
+    row.querySelector('.iSub').textContent='¥'+sub.toFixed(2);
+    cost+=sub;
+  });
+  const price=parseFloat($('rkPrice').value)||0;
+  const profit=price-cost;
+  const margin=price>0?Math.round(profit/price*100):0;
+  $('rcCost').textContent='¥'+cost.toFixed(2);
+  $('rcPrice').textContent='¥'+price.toFixed(2);
+  $('rcProfit').textContent='¥'+profit.toFixed(2);
+  $('rcMargin').textContent=margin+'%';
+}
+function saveDrink(){
+  const name=$('rkName').value.trim();
+  if(!name){alert('请填写饮品名称');return;}
+  const price=parseFloat($('rkPrice').value)||0;
+  const steps=$('rkSteps').value.trim();
+  const ings=[];
+  document.querySelectorAll('#ingList .ing-item').forEach(row=>{
+    ings.push({name:row.querySelector('.iName').value,amt:row.querySelector('.iAmt').value,cost:row.querySelector('.iCost').value});
+  });
+  let cost=0;ings.forEach(i=>{cost+=(parseFloat(i.amt)||0)*(parseFloat(i.cost)||0);});
+  const profit=price-cost;
+  const margin=price>0?Math.round(profit/price*100):0;
+  const drinks=JSON.parse(localStorage.getItem('wb_drinks')||'[]');
+  drinks.push({name,price,steps,ings,cost,profit,margin,date:T});
+  localStorage.setItem('wb_drinks',JSON.stringify(drinks));
+  resetRecipe();renderSavedDrinks();
+  alert('💾 配方已保存！');
+}
+function resetDrug(){
+  $('rkName').value='';$('rkPrice').value='';$('rkSteps').value='';
+  $('ingList').innerHTML=`<div class="ing-item">
+    <input placeholder="原料名" class="iName"><input placeholder="用量" class="iAmt" type="text" oninput="recalcRecipe()">
+    <input placeholder="单价¥" class="iCost" type="number" step="0.01" oninput="recalcRecipe()">
+    <span class="iSub" style="font-size:10px;color:var(--sub)">¥0.00</span>
+    <span class="idel" onclick="this.parentElement.remove();recalcRecipe()">×</span>
+  </div>`;
+  $('rcCost').textContent='¥0.00';$('rcPrice').textContent='¥0.00';$('rcProfit').textContent='¥0.00';$('rcMargin').textContent='0%';
+}
+// Fix: the function was named resetDrug but called as resetRecipe - need to fix this
+function resetRecipe(){resetDrug();}
+function renderSavedDrinks(){
+  const drinks=JSON.parse(localStorage.getItem('wb_drinks')||'[]');
+  $('savedDrinks').innerHTML=drinks.length?drinks.map((d,i)=>`<div class="drink-card">
+    <div style="font-size:24px">🍹</div>
+    <div class="dc-main">
+      <div class="dc-name">${esc(d.name)}</div>
+      <div class="dc-meta">售价 ¥${d.price} · 成本 ¥${d.cost.toFixed(2)} · ${d.date}</div>
+      <span class="dc-profit-badge ${d.margin>=50?'good':'bad'}">利润率 ${d.margin}%</span>
+    </div>
+    <span class="del" onclick="delDrink(${i})" style="align-self:flex-start">×</span>
+  </div>`).join(''):'<div class="note">还没有保存的配方，用上方表单创建你的第一款原创饮品吧 🍹</div>';
+}
+function delDrink(i){if(!confirm('删除此配方？'))return;const drinks=JSON.parse(localStorage.getItem('wb_drinks')||'[]');drinks.splice(i,1);localStorage.setItem('wb_drinks',JSON.stringify(drinks));renderSavedDrinks();}
+
 /* init */
 (async function boot(){
   renderCourses();renderSop();renderLists();renderPriv();renderCustom(); // 先用本地数据秒出
+  renderRecreate();renderMaterials();renderProdRecs();renderSavedDrinks(); // 新模块
   if(cloudOn()){ await cloudPull(); startCloudTimer(); } // 云端覆盖用户数据，保持双端一致
   await loadCloudContent(); startContentTimer(); // 拉取每日公开内容（无论是否启用云端同步）
 })();
