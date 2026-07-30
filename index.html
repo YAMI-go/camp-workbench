@@ -348,14 +348,12 @@ async function cloudPull(){
 }
 function renderAll(){renderCourses();renderSop();renderLists();renderPriv();renderCustom();}
 /* 每日内容（爆款/文案/话题/团建 + cc3/cc4 课程），由自动化每日08:00写入公开Gist，页面启动即拉取，无需token */
-const CONTENT_GIST='4fd19f4f463581e286634532e128fd46';
+const CONTENT_RAW='https://gist.githubusercontent.com/YAMI-go/4fd19f4f463581e286634532e128fd46/raw/content.json';
 async function loadCloudContent(){
   try{
-    const res=await fetch('https://api.github.com/gists/'+CONTENT_GIST+'?files=content.json',{cache:'no-store'});
+    const res=await fetch(CONTENT_RAW+'?_='+Date.now(),{cache:'no-store'});
     if(!res.ok)return;
-    const j=await res.json();
-    const f=j.files&&j.files['content.json'];if(!f||!f.content)return;
-    const ct=JSON.parse(f.content);
+    const ct=await res.json();
     if(Array.isArray(ct.GRAPHIC))GRAPHIC=ct.GRAPHIC;
     if(Array.isArray(ct.VIDEO))VIDEO=ct.VIDEO;
     if(Array.isArray(ct.COPY))COPY=ct.COPY;
