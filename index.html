@@ -1653,13 +1653,13 @@ let GRAPHIC=[
  {p:"视频号",t:"AI 治愈系风景红利",w:"可抵达的治愈感击中25-35上班族",d:"我们日落江景调色做成治愈短片"}
 ];
 let VIDEO=[
- {p:"抖音",t:"帐篷搭建三必拍爆点",u:"https://www.douyin.com/video/71234567890",w:"地钉入土慢动作/撑杆弹起/挂串灯亮灯0.5倍速",d:"拍我们天幕搭建三连击"},
+ {p:"抖音",t:"帐篷搭建三必拍爆点",w:"地钉入土慢动作/撑杆弹起/挂串灯亮灯0.5倍速",d:"拍我们天幕搭建三连击"},
  {p:"抖音",t:"阳光+草地+美食野炊刷屏",w:"真实松弛，评论区一片『看饿了』",d:"拍我们野炊式出杯"},
  {p:"抖音",t:"黄金时段时间切片延时",u:"",w:"每15分钟固定机位，云海流动赞暴增3倍",d:"我们日落延时30秒"},
  {p:"抖音",t:"环境音 ASMR 采集",w:"柴火/溪流/鸟鸣，完播率提升47%",d:"录江边流水+风声当BGM"},
  {p:"抖音",t:"第一人称探索 Vlog",w:"废墟探秘风用在露营，脑洞大",d:"主理人第一视角巡场"},
  {p:"抖音",t:"AI 变身/身份反差视频",w:"露营青年变赛博战士，有梗吃流量",d:"做主理人『素人→主理人』变身"},
- {p:"抖音",t:"轻量化vs搬家式对比",u:"https://www.douyin.com/video/72345678901",w:"争议讨论天然流量",d:"我们主打松弛半日"},
+ {p:"抖音",t:"轻量化vs搬家式对比",w:"争议讨论天然流量",d:"我们主打松弛半日"},
  {p:"视频号",t:"江畔村晚·露营+音乐",w:"老洲乡『村晚+露营+音乐』沉浸式田园",d:"我们乐队合作江边夜场"},
  {p:"抖音",t:"江景日落延时天然滤镜",w:"水+山+落日=天然滤镜，下午4点拍",d:"拍我们江面鎏金时刻"},
  {p:"小红书",t:"新手手机电影感速成",w:"推-摇-跟运镜+4K30帧，零设备出片",d:"我们手机拍营地教学"}
@@ -2299,6 +2299,17 @@ function showMoreMenu(){
 </div>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){console.log('SW 注册失败（不影响使用）');});});}
+/* 全局外链拦截：App(PWA)内点外部链接强制在系统浏览器新开，防止困在当前窗口无法返回 */
+document.addEventListener('click',function(ev){
+  var a=ev.target.closest?ev.target.closest('a[href]'):null;
+  if(!a)return;
+  var href=a.getAttribute('href')||'';
+  if(!/^https?:\/\//i.test(href))return;              /* 站内锚点等不拦 */
+  if(href.indexOf(location.host)>-1)return;            /* 本站链接不拦 */
+  ev.preventDefault();
+  var w=window.open(href,'_blank','noopener');
+  if(!w){location.href=href;}                          /* 弹窗被拦时兜底 */
+},true);
 </script>
 </body>
 </html>
