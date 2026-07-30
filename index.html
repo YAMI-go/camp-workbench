@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#eef5ff">
+<title>营地运营工作台</title>
+<style>
+  :root{
+    --bg:#eef5ff; --bg2:#f7fbff; --card:#ffffff;
+    --blue:#6ea8fe; --blue-d:#4a90e2; --blue-soft:#dbeafe;
+    --ink:#3a4a5a; --sub:#8aa0b5; --line:#e6eef9;
+    --mint:#b8e6d0; --mint-d:#5bbd95; --yellow:#fff1b8; --pink:#ffd9e8; --pink-d:#f48fb1;
+    --shadow:0 6px 20px rgba(110,168,254,.12);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:linear-gradient(160deg,#e9f2ff 0%,#f7fbff 60%);
+    color:var(--ink); font-weight:400; line-height:1.6;
+    -webkit-font-smoothing:antialiased; padding:0 0 60px;
+  }
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(247,251,255,.85); backdrop-filter:saturate(180%) blur(12px);
+    border-bottom:1px solid var(--line); padding:14px 18px 12px;
+  }
+  .ht{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px}
+  .logo{display:flex; align-items:center; gap:10px}
+  .logo .dot{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,var(--blue),#a8d0ff);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:18px}
+  .logo h1{font-size:18px;margin:0;font-weight:600;letter-spacing:.5px}
+  .logo p{font-size:11px;margin:0;color:var(--sub)}
+  .tools{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{border:1px solid var(--blue-soft);background:#fff;color:var(--blue-d);border-radius:10px;padding:7px 12px;font-size:12px;cursor:pointer;font-weight:500;transition:.2s}
+  .btn:hover{background:var(--blue-soft)}
+  .btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .meta{font-size:11px;color:var(--sub);margin-top:6px}
+  main{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px;padding:16px}
+  @media(max-width:380px){main{grid-template-columns:1fr;padding:12px}}
+  section{background:var(--card);border-radius:20px;padding:16px;box-shadow:var(--shadow);border:1px solid #fff}
+  .sec-h{display:flex;align-items:center;gap:8px;margin:0 0 12px}
+  .sec-h .num{width:24px;height:24px;border-radius:8px;background:var(--blue-soft);color:var(--blue-d);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .sec-h h2{font-size:15px;margin:0;font-weight:600}
+  .sec-h .tag{margin-left:auto;font-size:10px;color:var(--sub);background:#f2f7ff;padding:3px 8px;border-radius:20px}
+  /* 能力成长 */
+  .grow{display:flex;flex-direction:column;gap:11px}
+  .grow .row{display:flex;align-items:center;gap:10px}
+  .grow .name{width:96px;font-size:12.5px;flex-shrink:0}
+  .grow input[type=range]{flex:1;accent-color:var(--blue);height:4px}
+  .grow .val{width:42px;text-align:right;font-size:12px;color:var(--blue-d);font-weight:600}
+  .grow .lv{font-size:10px;color:var(--sub);width:34px;text-align:right}
+  .grow-sum{margin-top:10px;font-size:11px;color:var(--sub);text-align:center;background:#f2f7ff;border-radius:10px;padding:6px}
+  /* 能力饼图 */
+  .grow-top{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
+  .donut-wrap{position:relative;width:160px;height:160px;flex-shrink:0}
+  .donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+  .donut-pct{font-size:26px;font-weight:700;color:var(--blue-d)}
+  .donut-lab{font-size:10px;color:var(--sub)}
+  .legend{flex:1;min-width:170px;display:flex;flex-direction:column;gap:5px}
+  .lg{display:flex;align-items:center;gap:7px;font-size:12px}
+  .lg .sw{width:12px;height:12px;border-radius:4px;flex-shrink:0}
+  .lg .lgn{font-weight:600;color:var(--ink)}
+  .lg .lgv{margin-left:auto;color:var(--sub);font-size:11px}
+  /* SOP */
+  .sop{display:flex;flex-direction:column;gap:2px}
+  .sop .it{display:flex;align-items:flex-start;gap:9px;padding:7px 4px;border-bottom:1px dashed var(--line)}
+  .sop .it:last-child{border-bottom:none}
+  .sop input{margin-top:4px;width:16px;height:16px;accent-color:var(--blue-d);flex-shrink:0}
+  .sop label{font-size:12.5px;cursor:pointer}
+  .sop .it.done label{color:var(--sub);text-decoration:line-through}
+  .sop .ph{font-size:10px;color:var(--sub)}
+  .sop-bar{height:6px;border-radius:6px;background:var(--blue-soft);margin:10px 0 4px;overflow:hidden}
+  .sop-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#a8d0ff);width:0;transition:.3s}
+  .sop-pct{font-size:11px;color:var(--blue-d);text-align:right;font-weight:600}
+  /* 课程打卡 */
+  .branch{margin-top:13px}
+  .branch-h{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:600;margin-bottom:5px}
+  .branch-h .bn{color:var(--blue-d);font-size:11px;font-weight:600}
+  .branch .sop-bar{margin:0 0 6px}
+  .ttl-link{color:var(--blue-d);text-decoration:none;font-size:13px;font-weight:600;display:inline-block}
+  .ttl-link:hover{text-decoration:underline}
+  .card .ttl{margin:0 0 5px}
+  /* 卡片网格 */
+  .cards{display:flex;flex-direction:column;gap:10px}
+  .card{border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:var(--bg2);position:relative}
+  .card .plat{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;margin-bottom:6px}
+  .p-xhs{background:#ffe3ec;color:#e8477f}
+  .p-dy{background:#e3edff;color:#3b6fe0}
+  .p-wx{background:#d9f7e8;color:#1a9c63}
+  .p-sph{background:#fff0d6;color:#d99315}
+  .p-tb{background:#ede4ff;color:#7a5bd8}
+  .p-bili{background:#e7f0ff;color:#00a1d6}
+  .card .ttl{font-size:13px;font-weight:600;margin:0 0 5px}
+  .card .why{font-size:11.5px;color:#5a6b7a;margin:0 0 4px}
+  .card .why b{color:var(--pink-d)}
+  .card .dir{font-size:11.5px;color:var(--mint-d);margin:0;background:#eafaf3;border-radius:8px;padding:5px 8px}
+  .card .x{position:absolute;top:8px;right:10px;color:var(--sub);cursor:pointer;font-size:15px;line-height:1}
+  .sub-h{font-size:12px;color:var(--blue-d);font-weight:600;margin:14px 0 8px;display:flex;align-items:center;gap:6px}
+  .sub-h::before{content:"";width:3px;height:13px;background:var(--blue);border-radius:3px}
+  /* 添加行 */
+  .add{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+  .add input,.add textarea{flex:1;min-width:120px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px;font-family:inherit;background:#fbfdff;resize:vertical}
+  .add textarea{min-height:38px}
+  .pill{display:inline-block;background:var(--blue-soft);color:var(--blue-d);font-size:10px;padding:2px 7px;border-radius:20px;margin:3px 4px 0 0}
+  .copy-item,.topic-item,.priv-item,.custom-item{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--bg2);margin-bottom:9px;position:relative}
+  .copy-item .t,.topic-item .t,.priv-item .t,.custom-item .t{font-size:12.5px;font-weight:600;margin:0 0 4px;padding-right:18px}
+  .copy-item .c,.topic-item .c,.priv-item .c,.custom-item .c{font-size:11.5px;color:#5a6b7a;margin:0;white-space:pre-wrap}
+  .topic-item .hook{font-size:11px;color:var(--pink-d);margin-top:5px;background:#fff0f6;border-radius:8px;padding:5px 8px}
+  .del{position:absolute;top:8px;right:10px;color:var(--sub);cursor:pointer;font-size:15px}
+  .note{font-size:10.5px;color:var(--sub);margin-top:8px;line-height:1.5}
+  .full{grid-column:1/-1}
+  .formula{background:#f2f7ff;border-radius:12px;padding:10px 12px;font-size:11.5px;color:#4a5b6a;margin-bottom:8px}
+  .formula b{color:var(--blue-d)}
+  details{margin-top:6px}
+  summary{font-size:11.5px;color:var(--blue-d);cursor:pointer;font-weight:600}
+  .scroll{max-height:340px;overflow:auto;padding-right:2px}
+  .scroll::-webkit-scrollbar{width:6px}
+  .scroll::-webkit-scrollbar-thumb{background:var(--blue-soft);border-radius:6px}
+  /* 云端同步弹窗 */
+  .modal-mask{position:fixed;inset:0;background:rgba(40,60,90,.35);display:none;align-items:center;justify-content:center;z-index:200;padding:18px}
+  .modal-mask.show{display:flex}
+  .modal{background:#fff;border-radius:20px;max-width:430px;width:100%;padding:20px;box-shadow:0 20px 60px rgba(40,80,160,.25);max-height:88vh;overflow:auto}
+  .modal h3{margin:0 0 4px;font-size:16px}
+  .modal .sub{font-size:11.5px;color:var(--sub);margin:0 0 14px}
+  .modal label{font-size:12.5px;font-weight:600;display:block;margin:12px 0 5px}
+  .modal input[type=text],.modal input[type=password]{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:13px;font-family:inherit;box-sizing:border-box}
+  .modal .row{display:flex;gap:8px;align-items:center;margin:10px 0}
+  .modal .stat{font-size:12px;padding:8px 10px;border-radius:10px;background:#f2f7ff;margin:10px 0;color:var(--blue-d)}
+  .modal .stat.ok{color:#1a9c63;background:#eafaf3}
+  .modal .stat.err{color:#e8477f;background:#fff0f5}
+  .modal .stat.wait{color:#d99315;background:#fff0d6}
+  .modal .btns{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .ctip{font-size:11px;color:var(--sub);line-height:1.6;background:#f7fbff;border-radius:10px;padding:9px 11px;margin-top:10px}
+  .ctip b{color:var(--blue-d)}
+  .cloud-dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:#cbd5e1;margin-right:4px;vertical-align:middle}
+  .cloud-dot.on{background:#5bbd95}
+  .cloud-dot.err{background:#f48fb1}
+  .cloud-dot.wait{background:#ffd98a}
+</style>
+</head>
+<body>
+<header>
+  <div class="ht">
+    <div class="logo">
+      <div class="dot">🦋</div>
+      <div>
+        <h1>营地运营工作台</h1>
+        <p>小白运营成长 · 一日一清</p>
+      </div>
+    </div>
+    <div class="tools">
+      <button class="btn" id="cloudBtn" onclick="openCloud()">☁ 云端</button>
+      <button class="btn" onclick="exportAll()">⬇ 导出</button>
+      <button class="btn" onclick="document.getElementById('imp').click()">⬆ 导入</button>
+      <input type="file" id="imp" accept="application/json" style="display:none" onchange="importAll(event)">
+      <button class="btn primary" onclick="location.reload()">↻ 刷新</button>
+    </div>
+  </div>
+  <div class="meta"><span id="cloudStat" class="cloud-dot"></span><span id="cloudText" style="font-size:11px;color:var(--sub)">未启用云端</span> ｜ 📅 <span id="today"></span> ｜ 爆款素材由 AI 每日抓取近期平台趋势自动刷新（更新于 2026-07-30）｜ 各模块也可手动补充</div>
+</header>
+
+<main>
+  <!-- ① 能力成长 -->
+  <section class="full">
+    <div class="sec-h"><span class="num">①</span><h2>运营能力成长栏</h2><span class="tag">热门课程 · 可视化打卡</span></div>
+    <div class="grow-top">
+      <div class="donut-wrap">
+        <svg id="capDonut" viewBox="0 0 200 200" width="160" height="160"></svg>
+        <div class="donut-center"><div class="donut-pct" id="donutPct">0%</div><div class="donut-lab">整体能力</div></div>
+      </div>
+      <div class="legend" id="capLegend"></div>
+    </div>
+    <div class="grow-sum" id="courseSum"></div>
+    <div id="courses"></div>
+    <div class="note">按「分校目标」挑近期热门课程（含抖音 / B站 / 小红书等平台），每门配一项可打卡任务，点击来源标签可直达平台课程搜索；勾完即记录，上方饼图与各科进度实时更新。想加自己的课，用下方⑧自定义模块记即可。</div>
+  </section>
+
+  <!-- ② 每日SOP -->
+  <section>
+    <div class="sec-h"><span class="num">②</span><h2>每日运营 SOP 打卡</h2><span class="tag" id="sopDate"></span></div>
+    <div class="sop" id="sop"></div>
+    <div class="sop-bar"><i id="sopBar"></i></div>
+    <div class="sop-pct" id="sopPct">0%</div>
+  </section>
+
+  <!-- ③ 爆款素材 -->
+  <section class="full">
+    <div class="sec-h"><span class="num">③</span><h2>各平台爆款素材学习区</h2><span class="tag">图文10 + 视频10</span></div>
+    <div class="sub-h">📷 爆款图文素材（各 10 条参考）</div>
+    <div class="cards scroll" id="graphic" style="max-height:420px"></div>
+    <div class="add">
+      <input id="gT" placeholder="主题（如：江边日落氛围图）">
+      <input id="gI" placeholder="灵感/为什么爆">
+      <button class="btn primary" onclick="addItem('graphic','gT','gI')">+ 补充</button>
+    </div>
+    <div class="sub-h">🎬 爆款视频素材（各 10 条参考）</div>
+    <div class="cards scroll" id="video" style="max-height:420px"></div>
+    <div class="add">
+      <input id="vT" placeholder="主题（如：天幕搭建延时）">
+      <input id="vI" placeholder="灵感/为什么爆">
+      <button class="btn primary" onclick="addItem('video','vT','vI')">+ 补充</button>
+    </div>
+    <div class="note">参考方向来自近期趋势：轻量化露营（#低成本露营好物 播放超180亿）、森系视觉先行、村溪地域IP、日归/电车露营、懒人套餐。小红书重氛围、抖音重节奏剧情、视频号偏成熟转发。</div>
+  </section>
+
+  <!-- ④ 爆款文案灵感 -->
+  <section class="full">
+    <div class="sec-h"><span class="num">④</span><h2>爆款文案灵感库</h2><span class="tag">公式 + 营地适配</span></div>
+    <div class="formula"><b>万能结构：</b>痛点+颠覆+方法+引导 ｜ <b>黄金3秒钩子：</b>别再XX了！/ 我以为…结果… / 只花X分钟 / 被问爆了 / 同样是XX为什么你没流量？ ｜ <b>结尾必引导：</b>评论区聊聊 / 扣1发你 / 收藏少走弯路</div>
+    <div class="cards scroll" id="copy" style="max-height:380px"></div>
+    <div class="add">
+      <input id="cT" placeholder="标题/钩子">
+      <input id="cI" placeholder="正文或用法">
+      <button class="btn primary" onclick="addItem('copy','cT','cI')">+ 补充</button>
+    </div>
+  </section>
+
+  <!-- ⑤ 讨论性话题养IP -->
+  <section class="full">
+    <div class="sec-h"><span class="num">⑤</span><h2>讨论性话题（养 IP 账号）</h2><span class="tag">有争议才有关注</span></div>
+    <div class="cards scroll" id="topic" style="max-height:380px"></div>
+    <div class="add">
+      <input id="tT" placeholder="话题（如：露营是不是表演）">
+      <input id="tI" placeholder="怎么接梗/主理人视角">
+      <button class="btn primary" onclick="addItem('topic','tT','tI')">+ 补充</button>
+    </div>
+    <div class="note">IP 主线建议：创业记录型「江边500㎡营地从0」+ 透明账本（亏了也发更爆）+ 定价争议 + 改造连载 + 踩坑真实吐槽。黑红也是红，不怕有人骂就怕没人看。</div>
+  </section>
+
+  <!-- ⑥ 私域群文案 -->
+  <section>
+    <div class="sec-h"><span class="num">⑥</span><h2>私域群每日分享文案</h2><span class="tag" id="privCount">0 条</span></div>
+    <div class="cards scroll" id="priv" style="max-height:420px"></div>
+    <div class="add">
+      <input id="pT" placeholder="今日群分享文案（≥5条/天）">
+      <button class="btn primary" onclick="addPriv()">+ 添加</button>
+    </div>
+    <div class="note">默认给了 6 条示例，可删可加。每天积累 ≥5 条，月底就是现成的群运营素材库。</div>
+  </section>
+
+  <!-- ⑦ 热门团建活动推送 -->
+  <section class="full">
+    <div class="sec-h"><span class="num">⑦</span><h2>每日热门团建活动推送</h2><span class="tag">每日 3 条</span></div>
+    <div class="cards scroll" id="team" style="max-height:420px"></div>
+    <div class="add">
+      <input id="tT2" placeholder="团建活动主题（如：江边飞盘破冰）">
+      <input id="tI2" placeholder="为什么火 / 怎么接">
+      <button class="btn primary" onclick="addTeam()">+ 补充</button>
+    </div>
+    <div class="note">每日更新 3 条近期热门团建玩法，给 B 端（公司 / 闺蜜团 / 班级）拓客与套餐设计灵感。默认存 3 条示例，可删可换，每天替换成当日新发现即可。</div>
+  </section>
+
+  <!-- ⑧ 自定义 -->
+  <section>
+    <div class="sec-h"><span class="num">⑧</span><h2>自定义模块</h2><span class="tag">随你记</span></div>
+    <div class="cards scroll" id="custom" style="max-height:420px"></div>
+    <div class="add">
+      <input id="cuT" placeholder="标题（如：本周待办）">
+      <textarea id="cuI" placeholder="内容…"></textarea>
+      <button class="btn primary" onclick="addCustom()">+ 添加</button>
+    </div>
+  </section>
+</main>
+
+<!-- 云端同步弹窗 -->
+<div class="modal-mask" id="cloudMask" onclick="if(event.target===this)closeCloud()">
+  <div class="modal">
+    <h3>☁ 云端同步设置</h3>
+    <p class="sub">把打卡 / 文案 / 自定义内容存到 GitHub Gist，手机和电脑实时一致</p>
+    <div class="row">
+      <input type="checkbox" id="cloudOn"> <label style="margin:0;font-weight:600;font-size:13px" for="cloudOn">启用云端同步</label>
+    </div>
+    <label>GitHub Token（仅需 gist 权限）</label>
+    <input type="password" id="cloudToken" placeholder="ghp_xxxxxxxxxxxx 或 github_pat_xxx">
+    <label>Gist ID（首次自动创建，无需手填）</label>
+    <input type="text" id="cloudGist" placeholder="自动生成，保存后显示" readonly>
+    <div class="stat" id="cloudStatBox">未连接</div>
+    <div class="btns">
+      <button class="btn primary" onclick="saveCloud()">保存并连接</button>
+      <button class="btn" onclick="syncNow()">立即同步</button>
+      <button class="btn" onclick="closeCloud()">关闭</button>
+    </div>
+    <div class="ctip">如何生成 Token：登录 GitHub → 右上角头像 → <b>Settings</b> → 左侧 <b>Developer settings</b> → <b>Personal access tokens</b> → <b>Tokens (classic)</b> → <b>Generate new token</b> → 只勾选 <b>gist</b> → 生成后复制粘贴到上方。<br>Token 仅保存在你本机浏览器，只用于读写你自己的 Gist，可随时在 GitHub 撤销。</div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+
+/* ---------- 云端同步（GitHub Gist，跨设备实时一致） ---------- */
+const GH='https://api.github.com';
+const CLOUD_K='wb_cloud';
+function cloudCfg(){try{return JSON.parse(localStorage.getItem(CLOUD_K)||'{}')}catch(e){return{}}}
+function setCloudCfg(o){localStorage.setItem(CLOUD_K,JSON.stringify(o))}
+function cloudOn(){const c=cloudCfg();return !!(c.enabled&&c.token);}
+let _pushTimer=null;
+function schedulePush(){clearTimeout(_pushTimer);_pushTimer=setTimeout(cloudPush,1200);}
+/* 拦截所有 wb_* 写入（导出/导入除外由开关控制），自动触发上传 */
+(function(){
+  const _orig=Storage.prototype.setItem;
+  Storage.prototype.setItem=function(k,v){
+    _orig.call(this,k,v);
+    if(typeof k==='string'&&k.indexOf('wb_')===0&&k!==CLOUD_K) schedulePush();
+  };
+})();
+async function collectWB(){
+  const data={};
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf('wb_')===0&&k!==CLOUD_K)data[k]=localStorage.getItem(k);}
+  return data;
+}
+function cloudStat(txt,cls){const s=$('cloudStatBox');if(s){s.textContent=txt;s.className='stat'+(cls?' '+cls:'');}
+  const d=$('cloudStat'),x=$('cloudText');if(d&&x){d.className='cloud-dot '+(cls||'');x.textContent=txt;}}
+async function cloudPush(){
+  const c=cloudCfg();if(!c.enabled||!c.token)return;
+  try{
+    const data=await collectWB();
+    const content=JSON.stringify(data,null,2);
+    let res,created=false;
+    if(c.gistId){
+      res=await fetch(GH+'/gists/'+c.gistId,{method:'PATCH',headers:{'Authorization':'token '+c.token,'Content-Type':'application/json'},body:JSON.stringify({files:{'data.json':{content}}})});
+    }else{
+      created=true;
+      res=await fetch(GH+'/gists',{method:'POST',headers:{'Authorization':'token '+c.token,'Content-Type':'application/json'},body:JSON.stringify({description:'营地运营工作台云端同步',public:false,files:{'data.json':{content}}})});
+    }
+    if(res.ok){
+      if(created){const j=await res.json();c.gistId=j.id;setCloudCfg(c);const g=$('cloudGist');if(g)g.value=c.gistId;}
+      c.lastSync=Date.now();setCloudCfg(c);
+      cloudStat('已同步 · '+new Date().toLocaleTimeString('zh-CN'),'ok');
+    }else{const j=await res.json().catch(()=>({}));cloudStat('同步失败：'+(j.message||res.status),'err');}
+  }catch(e){cloudStat('网络错误：'+e.message,'err');}
+}
+async function cloudPull(){
+  const c=cloudCfg();if(!c.enabled||!c.token||!c.gistId)return;
+  try{
+    const res=await fetch(GH+'/gists/'+c.gistId,{headers:{'Authorization':'token '+c.token}});
+    if(!res.ok){cloudStat('拉取失败：'+res.status,'err');return;}
+    const j=await res.json();
+    const f=j.files&&j.files['data.json'];if(!f||!f.content)return;
+    const data=JSON.parse(f.content);
+    Object.keys(data).forEach(k=>localStorage.setItem(k,data[k]));
+    c.lastSync=Date.now();setCloudCfg(c);
+    renderAll();
+    cloudStat('已同步 · '+new Date().toLocaleTimeString('zh-CN'),'ok');
+  }catch(e){cloudStat('拉取错误：'+e.message,'err');}
+}
+function renderAll(){renderCourses();renderSop();renderLists();renderPriv();renderCustom();}
+function openCloud(){const c=cloudCfg();$('cloudOn').checked=!!c.enabled;$('cloudToken').value=c.token||'';$('cloudGist').value=c.gistId||'';cloudStat(c.enabled?'已连接':'未连接',c.enabled?'ok':'');$('cloudMask').classList.add('show');}
+function closeCloud(){$('cloudMask').classList.remove('show');}
+function startCloudTimer(){if(window._cloudTimer)return;window._cloudTimer=setInterval(()=>{if(cloudOn())cloudPull();},30000);}
+async function saveCloud(){
+  const c=cloudCfg();
+  c.enabled=$('cloudOn').checked;
+  c.token=$('cloudToken').value.trim();
+  setCloudCfg(c);
+  if(!c.enabled){cloudStat('已关闭云端','');return;}
+  if(!c.token){cloudStat('请填写 Token','err');return;}
+  cloudStat('连接中…','wait');
+  await cloudPush();
+  if(cloudCfg().gistId) startCloudTimer();
+}
+async function syncNow(){const c=cloudCfg();if(!c.enabled||!c.token){cloudStat('请先启用并填写 Token','err');return;}cloudStat('同步中…','wait');await cloudPull();await cloudPush();}
+const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+const T=todayStr();
+$('today').textContent=T;
+
+/* ---------- ① 能力成长：热门课程可视化打卡 ---------- */
+const BRANCHES=["内容创作","数据运营","私域转化","IP打造","活动策划"];
+const COURSES=[
+ {id:"cc1",b:"内容创作",c:"小红书爆款图文拆解（近7天热门）",t:"拆解3篇本地生活爆款并模仿发布1条",src:"小红书",lock:true},
+ {id:"cc2",b:"内容创作",c:"抖音黄金3秒钩子训练",t:"写5条营地钩子脚本并实拍1条",src:"抖音",lock:true},
+ {id:"cc3",b:"内容创作",c:"江景拍摄构图与调色",t:"拍1组日落对比图（调色前后）",src:"B站"},
+ {id:"cc4",b:"内容创作",c:"手机剪辑与调色速成",t:"剪1条江边日落成片（转场/BGM）",src:"B站"},
+ {id:"cc5",b:"内容创作",c:"短视频脚本写作入门",t:"写3条营地选题脚本并拍1条",src:"抖音",lock:true},
+ {id:"do1",b:"数据运营",c:"新号冷启动数据复盘法",t:"记录本周3条内容数据并排名",src:"视频号",lock:true},
+ {id:"do2",b:"数据运营",c:"抖音来客后台数据看板",t:"看懂团购曝光→核销转化漏斗",src:"抖音",lock:true},
+ {id:"do3",b:"数据运营",c:"渠道码扫码归因",t:"导出核销台账，算4码转化率",src:"工作台",lock:true},
+ {id:"pr1",b:"私域转化",c:"社群促活话术",t:"本周在群内发起1次接龙/投票",src:"微信",lock:true},
+ {id:"pr2",b:"私域转化",c:"优惠券核销SOP",t:"用核销台完成10单登记",src:"核销台",lock:true},
+ {id:"pr3",b:"私域转化",c:"私域裂变引流",t:"设计1个老带新钩子并落地",src:"微信",lock:true},
+ {id:"ip1",b:"IP打造",c:"创业记录型人设搭建",t:"发布1条「第N天」连载",src:"小红书",lock:true},
+ {id:"ip2",b:"IP打造",c:"透明账本涨粉法",t:"发布1周账本复盘帖",src:"抖音",lock:true},
+ {id:"ip3",b:"IP打造",c:"个人IP内容规划",t:"学B站IP定位课并写定位卡",src:"B站",lock:true},
+ {id:"ev1",b:"活动策划",c:"低频活动流水线",t:"策划1场团建并排期落地",src:"SOP",lock:true},
+ {id:"ev2",b:"活动策划",c:"团建活动策划与执行",t:"对接1个B端团建需求并出方案",src:"抖音",lock:true}
+];
+const BRANCH_COLOR={"内容创作":"#8ec5ff","数据运营":"#7fd6b5","私域转化":"#ffb3cf","IP打造":"#ffd98a","活动策划":"#b39ddb"};
+function polar(cx,cy,r,ang){const a=ang*Math.PI/180;return [cx+r*Math.sin(a),cy-r*Math.cos(a)];}
+function annularSector(cx,cy,ri,ro,a0,a1){
+  const [x0o,y0o]=polar(cx,cy,ro,a0),[x1o,y1o]=polar(cx,cy,ro,a1),[x1i,y1i]=polar(cx,cy,ri,a1),[x0i,y0i]=polar(cx,cy,ri,a0);
+  const large=((a1-a0)%360)>180?1:0;
+  return `M ${x0o.toFixed(2)} ${y0o.toFixed(2)} A ${ro} ${ro} 0 ${large} 1 ${x1o.toFixed(2)} ${y1o.toFixed(2)} L ${x1i.toFixed(2)} ${y1i.toFixed(2)} A ${ri} ${ri} 0 ${large} 0 ${x0i.toFixed(2)} ${y0i.toFixed(2)} Z`;
+}
+function coursePlat(p){return {'抖音':'p-dy','B站':'p-bili','小红书':'p-xhs','视频号':'p-sph','微信':'p-wx','SOP':'p-tb','工作台':'p-tb','核销台':'p-tb'}[p]||'p-dy';}
+function courseLink(p){
+  const kw=encodeURIComponent(p+'运营课程教程');
+  if(p==='抖音') return 'https://www.douyin.com/search/'+encodeURIComponent(p+'运营课程');
+  if(p==='B站') return 'https://search.bilibili.com/all?keyword='+kw;
+  if(p==='小红书') return 'https://www.xiaohongshu.com/search_result?keyword='+kw;
+  if(p==='视频号'||p==='微信') return 'https://www.bing.com/search?q='+kw;
+  return '';
+}
+function renderDonut(){
+  const done=JSON.parse(localStorage.getItem('wb_course')||'{}');
+  const total=COURSES.length;
+  const groups=BRANCHES.map(b=>{
+    const idxs=[];COURSES.forEach((c,i)=>{if(c.b===b)idxs.push(i);});
+    const com=idxs.filter(i=>done[COURSES[i].id]).length;
+    return {b,com,total:idxs.length,pct:idxs.length?com/idxs.length:0};
+  });
+  const seg=360/BRANCHES.length; let ang=0,paths='';
+  groups.forEach(g=>{
+    const a0=ang,a1=ang+seg;ang=a1;
+    paths+=`<path d="${annularSector(100,100,60,82,a0,a1)}" fill="#eef2f7"/>`;
+    if(g.com>0){const fa1=a0+(a1-a0)*(g.com/g.total);paths+=`<path d="${annularSector(100,100,60,82,a0,fa1)}" fill="${BRANCH_COLOR[g.b]}"/>`;}
+  });
+  $('capDonut').innerHTML=paths;
+  const dc=COURSES.filter((_,i)=>done[COURSES[i].id]).length;
+  $('donutPct').textContent=Math.round(dc/total*100)+'%';
+  $('capLegend').innerHTML=groups.map(g=>`<div class="lg"><span class="sw" style="background:${BRANCH_COLOR[g.b]}"></span><span class="lgn">${g.b}</span><span class="lgv">${g.com}/${g.total} · ${Math.round(g.pct*100)}%</span></div>`).join('');
+}
+function renderCourses(){
+  const done=JSON.parse(localStorage.getItem('wb_course')||'{}');
+  let html='';
+  BRANCHES.forEach(b=>{
+    const idxs=[];COURSES.forEach((c,i)=>{if(c.b===b)idxs.push(i);});
+    const bd=idxs.filter(i=>done[COURSES[i].id]).length;
+    const pct=Math.round(bd/idxs.length*100);
+    html+=`<div class="branch"><div class="branch-h"><span>🎯 ${b}</span><span class="bn">${bd}/${idxs.length} · ${pct}%</span></div><div class="sop-bar"><i style="width:${pct}%"></i></div>`;
+    html+=idxs.map(i=>{
+      const c=COURSES[i];const on=done[COURSES[i].id]?'done':'';const ck=done[COURSES[i].id]?'checked':'';
+      const lk=courseLink(c.src);
+      const badge=lk?`<a class="plat ${coursePlat(c.src)}" href="${lk}" target="_blank" rel="noopener" style="text-decoration:none">${esc(c.src)} ↗</a>`:`<span class="plat ${coursePlat(c.src)}">${esc(c.src)}</span>`;
+      return `<div class="it ${on}"><input type="checkbox" ${ck} onchange="setCourse('${c.id}',this.checked)"><label>${esc(c.c)}${c.lock?'<span style="font-size:10px;color:#d99315;background:#fff0d6;border-radius:6px;padding:1px 5px;margin-left:6px">🔒固定</span>':''}<div class="ph">📌 ${esc(c.t)} ｜ 来源：${badge}</div></label></div>`;
+    }).join('');
+    html+=`</div>`;
+  });
+  $('courses').innerHTML=html;
+  const dc=COURSES.filter((_,i)=>done[COURSES[i].id]).length;
+  $('courseSum').textContent=`已打卡 ${dc}/${COURSES.length} 门 · 整体进度 ${Math.round(dc/COURSES.length*100)}%`;
+  renderDonut();
+}
+function setCourse(id,v){const d=JSON.parse(localStorage.getItem('wb_course')||'{}');d[id]=v;localStorage.setItem('wb_course',JSON.stringify(d));renderCourses();}
+
+/* ---------- ② 每日SOP ---------- */
+const SOP=[["开档巡检","桌椅/灯串/江边安全线"],["物料盘点","柠檬茶原料、杯子、冰块够不够"],["价目表/优惠券就位","菜单立牌+电子优惠券二维码摆好"],["拍空场素材","3-5段空镜：日光/江面/座位"],["私域群早安帖","天气+今日到店理由"],["出品+核销","团购当面核销；顾客优惠券→核销台登记"],["抓拍客人素材","每天≥10张/5段（正脸需征得同意）"],["记一条今日发生","有趣对话/突发/卖出多少杯"],["引导进群","结账：「扫码进群，及时了解小店活动」"],["评论区回复","新评论2h内回完；发布后前30min守评"],["拍当日主素材","日落+江景+人气（全天最好内容）"],["发实时贴","小红书/抖音发实时日落，带定位蝴蝶谷"],["群内直播式刷屏","2-3张现场图拉即时到店"],["记账","现金+扫码+团购核销数，透明账本素材"],["发当天主内容","按每日文案具体化当天条目发"],["群晚安帖","今日高光图+明日预告"],["明日备料清单","缺什么写下来明早买"],["3分钟复盘","哪条内容好？哪个时段人多？"]];
+function renderSop(){
+  $('sopDate').textContent=T;
+  const data=JSON.parse(localStorage.getItem('wb_sop_'+T)||'{}');
+  $('sop').innerHTML=SOP.map((s,i)=>{
+    const on=data[i]?'done':'';const ck=data[i]?'checked':'';
+    return `<div class="it ${on}"><input type="checkbox" ${ck} onchange="setSop(${i},this.checked)"><label>${i+1}. ${s[0]}<div class="ph">${s[1]}</div></label></div>`;
+  }).join('');
+  const done=SOP.filter((_,i)=>data[i]).length;
+  const pct=Math.round(done/SOP.length*100);
+  $('sopBar').style.width=pct+'%';$('sopPct').textContent=pct+'%';
+}
+function setSop(i,v){const k='wb_sop_'+T;const d=JSON.parse(localStorage.getItem(k)||'{}');d[i]=v;localStorage.setItem(k,JSON.stringify(d));renderSop();}
+
+/* ---------- 通用：渲染写死+补充 ---------- */
+function platClass(p){return {'小红书':'p-xhs','抖音':'p-dy','微信':'p-wx','视频号':'p-sph','公众号':'p-wx','团建':'p-tb'}[p]||'p-dy';}
+function linkFor(o){
+  if(o.u) return o.u;
+  const kw=encodeURIComponent(o.t);
+  if(o.p==='小红书') return 'https://www.xiaohongshu.com/search_result?keyword='+kw;
+  if(o.p==='抖音') return 'https://www.douyin.com/search/'+kw;
+  if(o.p==='团建') return 'https://www.bing.com/search?q='+encodeURIComponent(o.t+' 团建方案');
+  return 'https://www.bing.com/search?q='+encodeURIComponent(o.t+' '+o.p);
+}
+function renderList(id,arr,key,fields){
+  const add=JSON.parse(localStorage.getItem('wb_add_'+key)||'[]');
+  const all=arr.concat(add);
+  $(id).innerHTML=all.map((o,idx)=>{
+    const isAdd=idx>=arr.length;
+    let inner=`<span class="plat ${platClass(o.p)}">${o.p}</span><a class="ttl ttl-link" href="${linkFor(o)}" target="_blank" rel="noopener">${esc(o.t)} ↗</a>`;
+    if(fields==='material') inner+=`<p class="why">${esc(o.w)}</p><p class="dir">参考方向：${esc(o.d)}</p>`;
+    else inner+=`<p class="c">${esc(o.c||o.w)}</p>`;
+    if(isAdd) inner+=`<span class="x" onclick="delAdd('${key}',${idx-arr.length})">×</span>`;
+    return `<div class="card">${inner}</div>`;
+  }).join('')||'<div class="note">暂无，去下方补充一条吧～</div>';
+}
+function addItem(key,t1,t2){
+  const t=$(t1).value.trim(),i=$(t2).value.trim();
+  if(!t){alert('先填主题');return;}
+  const add=JSON.parse(localStorage.getItem('wb_add_'+key)||'[]');
+  const p=key==='graphic'||key==='video'?'抖音':(key==='copy'?'小红书':'微信');
+  add.push({p,t,w:i,c:i});
+  localStorage.setItem('wb_add_'+key,JSON.stringify(add));
+  $(t1).value='';$(t2).value='';
+  renderLists();
+}
+function delAdd(key,i){const add=JSON.parse(localStorage.getItem('wb_add_'+key)||'[]');add.splice(i,1);localStorage.setItem('wb_add_'+key,JSON.stringify(add));renderLists();}
+
+const GRAPHIC=[
+ {p:"小红书",t:"松弛感 > 出片感",w:"年轻人不为摆拍硬凹，为『不赶时间不端架子』买单",d:"拍我们『瘫在天幕下发呆』的真实松弛图"},
+ {p:"小红书",t:"公园20分钟效应",w:"席地而坐、装备越少心越自由，治愈回血话题暴涨",d:"做『不用带帐篷也能回血』系列"},
+ {p:"抖音",t:"轻量化露营碾压精致",w:"后备箱只装三件东西，搬家式露营被抛弃",d:"拍我们『空手来』半日体验对比"},
+ {p:"小红书",t:"田园风/花海治愈",w:"原木门头+草垛座椅+竹编，越朴素越打动都市人",d:"我们江边草垛+竹编装饰场景"},
+ {p:"小红书",t:"北欧森林木屋+萌宠IP",w:"童话治愈感，亲子/闺蜜客群稳定",d:"我们『蝴蝶谷』蝴蝶IP延伸"},
+ {p:"抖音",t:"江浙沪竹林溯溪玩水",w:"桨板/皮划艇/吊床下午茶，chill夏日",d:"我们浅滩亲水+吊床场景"},
+ {p:"小红书",t:"稻田系沉浸式睡眠",w:"星空+萤火虫+千亩梯田，『稻梦空间』爆款",d:"我们江边星空夜拍"},
+ {p:"抖音",t:"户外野炊烟火气",w:"有人掌勺有人打下手，松弛真实最出圈",d:"拍我们柠檬茶+简食出杯"},
+ {p:"小红书",t:"今昔对比 AI 短视频",w:"老照片→现在，时光流逝破防泪目",d:"做『营地第1天vs第100天』对比"},
+ {p:"视频号",t:"AI 治愈系风景红利",w:"可抵达的治愈感击中25-35上班族",d:"我们日落江景调色做成治愈短片"}
+];
+const VIDEO=[
+ {p:"抖音",t:"帐篷搭建三必拍爆点",w:"地钉入土慢动作/撑杆弹起/挂串灯亮灯0.5倍速",d:"拍我们天幕搭建三连击"},
+ {p:"抖音",t:"阳光+草地+美食野炊刷屏",w:"真实松弛，评论区一片『看饿了』",d:"拍我们野炊式出杯"},
+ {p:"抖音",t:"黄金时段时间切片延时",w:"每15分钟固定机位，云海流动赞暴增3倍",d:"我们日落延时30秒"},
+ {p:"抖音",t:"环境音 ASMR 采集",w:"柴火/溪流/鸟鸣，完播率提升47%",d:"录江边流水+风声当BGM"},
+ {p:"抖音",t:"第一人称探索 Vlog",w:"废墟探秘风用在露营，脑洞大",d:"主理人第一视角巡场"},
+ {p:"抖音",t:"AI 变身/身份反差视频",w:"露营青年变赛博战士，有梗吃流量",d:"做主理人『素人→主理人』变身"},
+ {p:"抖音",t:"轻量化vs搬家式对比",w:"争议讨论天然流量",d:"我们主打松弛半日"},
+ {p:"视频号",t:"江畔村晚·露营+音乐",w:"老洲乡『村晚+露营+音乐』沉浸式田园",d:"我们乐队合作江边夜场"},
+ {p:"抖音",t:"江景日落延时天然滤镜",w:"水+山+落日=天然滤镜，下午4点拍",d:"拍我们江面鎏金时刻"},
+ {p:"小红书",t:"新手手机电影感速成",w:"推-摇-跟运镜+4K30帧，零设备出片",d:"我们手机拍营地教学"}
+];
+const COPY=[
+ {p:"小红书",t:"黄金3秒钩子库",c:"①别再XX了！90%的人都做错 ②我以为…结果…（反差封神） ③只花X分钟，我搞定了XX ④被问爆了！这招我只说一次 ⑤同样是XX，为什么你没流量？"},
+ {p:"抖音",t:"反常识破壁人",c:"『露营圈逻辑变了：不比装备，比谁离班味更远』——打破刻板印象+一线真相，轻幽默表达"},
+ {p:"小红书",t:"可复制生活解法者",c:"『江边500㎡营地，我把它做成不赶时间的松弛据点』——具体问题+即时可用+结果感"},
+ {p:"抖音",t:"反精致·真实感",c:"扔掉滤镜/剧本/偶像包袱，把『崩』拍出来——车链子崩了、高反吐了，越狼狈越留人"},
+ {p:"视频号",t:"情绪共鸣+轻剧情",c:"『端午不是表演是生活』式慢叙事，不吵不闹真治愈，适合转发"},
+ {p:"小红书",t:"🌿营地适配1",c:"『在江边租了500㎡做营地，第3天我就后悔了…（不是）』——反转钩子开场，接真实创业日常"},
+ {p:"抖音",t:"🌿营地适配2",c:"『9.9入场券是割韭菜吗？我把账本摊开给你看』——定价争议+透明账本，引评论区吵架=引流量"},
+ {p:"视频号",t:"🌿营地适配3",c:"『逃离城市第N天：江边的风比老板的画饼实在』——情绪价值+地域IP，适合转发"}
+];
+const TOPIC=[
+ {p:"微信",t:"露营圈逻辑变了",c:"不比装备，比谁离『班味』更远",hook:"接：我们主打『松弛半日』，不劝你买装备"},
+ {p:"抖音",t:"公园20分钟效应",c:"席地而坐治愈回血",hook:"接：江边坐会儿也是度假，发松弛图"},
+ {p:"小红书",t:"轻量化vs搬家式",c:"争议讨论",hook:"接：我们空手来，装备焦虑退退退"},
+ {p:"抖音",t:"9.9入场券是割韭菜吗",c:"定价争议",hook:"接：发透明账本正面回应，亏了也发更爆"},
+ {p:"小红书",t:"没食品证团购只能这么上",c:"真实踩坑",hook:"接：第一人称吐槽，真实感涨粉"},
+ {p:"视频号",t:"地域IP/江畔村晚",c:"地域流量",hook:"接：我们『蝴蝶谷』+乐队江边夜场蹭话题"},
+ {p:"抖音",t:"AI治愈系风景红利",c:"可抵达的治愈感",hook:"接：我们日落江景做成治愈短片"}
+];
+const TEAM=[
+ {p:"团建",t:"飞盘+露营（年轻人投票第一）",w:"规则简单上手快、零压力破冰、出片率高，00后说『这才是该玩的团建』",d:"我们半日包场+飞盘+柠檬茶，主打空手来"},
+ {p:"团建",t:"创意手工+下午茶",w:"香薰蜡烛/流体熊/插花，边做边聊成品带走，女员工朋友圈刷三天",d:"接手冲柠檬茶体验+草编/流体熊DIY"},
+ {p:"团建",t:"江畔露营+草地音乐会+篝火",w:"老洲乡『村晚+露营+音乐』模式，江边契合度高、氛围拉满",d:"用我们乐队资源做晚间专场，引B端复购"}
+];
+
+/* ---------- ⑥ 私域群文案 ---------- */
+function renderPriv(){
+  let arr=JSON.parse(localStorage.getItem('wb_priv')||'null');
+  if(!arr) {arr=[["早安","今日晴22℃，江风舒服，来坐坐？"],["专属","报『蝴蝶谷』到店柠檬茶8.8折"],["实时","日落了，江边现在这样🌅（配图）"],["周末","本周六民谣夜，群友优先留位"],["返图","晒图返¥3，群里接龙啦"],["账本","本周卖了X杯，谢谢家人们💙"]];localStorage.setItem('wb_priv',JSON.stringify(arr));}
+  $('priv').innerHTML=arr.map((o,i)=>`<div class="priv-item"><span class="t">${esc(o[0])}</span><p class="c">${esc(o[1])}</p><span class="del" onclick="delPriv(${i})">×</span></div>`).join('');
+  $('privCount').textContent=arr.length+' 条';
+}
+function addPriv(){const v=$('pT').value.trim();if(!v){alert('填点什么吧');return;}const arr=JSON.parse(localStorage.getItem('wb_priv')||'[]');arr.push(['群分享',v]);localStorage.setItem('wb_priv',JSON.stringify(arr));$('pT').value='';renderPriv();}
+function delPriv(i){const arr=JSON.parse(localStorage.getItem('wb_priv')||'[]');arr.splice(i,1);localStorage.setItem('wb_priv',JSON.stringify(arr));renderPriv();}
+
+/* ---------- ⑦ 自定义 ---------- */
+function renderCustom(){
+  const arr=JSON.parse(localStorage.getItem('wb_custom')||'[]');
+  $('custom').innerHTML=arr.map((o,i)=>`<div class="custom-item"><span class="t">${esc(o.t)}</span><p class="c">${esc(o.c)}</p><span class="del" onclick="delCustom(${i})">×</span></div>`).join('')||'<div class="note">还没有便签，下面加一条～</div>';
+}
+function addCustom(){const t=$('cuT').value.trim(),c=$('cuI').value.trim();if(!t&&!c){alert('填点什么吧');return;}const arr=JSON.parse(localStorage.getItem('wb_custom')||'[]');arr.push({t,c});localStorage.setItem('wb_custom',JSON.stringify(arr));$('cuT').value='';$('cuI').value='';renderCustom();}
+function delCustom(i){const arr=JSON.parse(localStorage.getItem('wb_custom')||'[]');arr.splice(i,1);localStorage.setItem('wb_custom',JSON.stringify(arr));renderCustom();}
+
+/* ---------- 工具 ---------- */
+function esc(s){return (s||'').toString().replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+function renderLists(){renderList('graphic',GRAPHIC,'graphic');renderList('video',VIDEO,'video');renderList('copy',COPY,'copy');renderList('topic',TOPIC,'topic');renderList('team',TEAM,'team','material');}
+
+function addTeam(){const t=$('tT2').value.trim(),i=$('tI2').value.trim();if(!t){alert('先填主题');return;}const add=JSON.parse(localStorage.getItem('wb_add_team')||'[]');add.push({p:'团建',t,w:i,d:i});localStorage.setItem('wb_add_team',JSON.stringify(add));$('tT2').value='';$('tI2').value='';renderLists();}
+
+/* ---------- 导出/导入 ---------- */
+function exportAll(){
+  const out={};
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('wb_'))out[k]=localStorage.getItem(k);}
+  const blob=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='蝴蝶谷工作台数据_'+T+'.json';a.click();
+}
+function importAll(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);Object.keys(d).forEach(k=>localStorage.setItem(k,d[k]));alert('导入成功，即将刷新');location.reload();}catch(err){alert('文件格式不对');}};
+  r.readAsText(f);
+}
+
+/* init */
+(async function boot(){
+  renderCourses();renderSop();renderLists();renderPriv();renderCustom(); // 先用本地数据秒出
+  if(cloudOn()){ await cloudPull(); startCloudTimer(); } // 再用云端覆盖，保持双端一致
+})();
+</script>
+</body>
+</html>
