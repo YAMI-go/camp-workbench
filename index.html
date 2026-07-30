@@ -529,6 +529,18 @@ summary{font-size:12px;color:var(--primary);cursor:pointer;font-weight:600;}
 
 /* 隐藏类 */
 .hidden{display:none!important;}
+/* ========== 外部链接查看器 ========== */
+.ext-box{background:#fff;border-radius:20px;max-width:380px;width:100%;overflow:hidden;box-shadow:var(--shadow-lg);animation:slideUp .25s ease;}
+.ext-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);}
+.ext-title{font-size:14px;font-weight:700;color:var(--ink);}
+.ext-close{border:none;background:var(--bg2);width:30px;height:30px;border-radius:50%;font-size:16px;color:var(--sub);cursor:pointer;}
+.ext-close:active{background:var(--line);}
+.ext-body{padding:16px;}
+.ext-site{font-size:15px;font-weight:700;color:var(--primary);margin-bottom:6px;word-break:break-all;}
+.ext-url{display:block;font-size:12px;color:var(--sub);background:var(--bg2);border-radius:10px;padding:9px 11px;margin-bottom:10px;word-break:break-all;line-height:1.5;cursor:pointer;}
+.ext-tip{font-size:11.5px;color:var(--sub);line-height:1.7;margin-bottom:14px;}
+.ext-actions{display:flex;gap:8px;}
+.ext-actions .btn{flex:1;justify-content:center;}
 </style>
 </head>
 <body>
@@ -2299,7 +2311,7 @@ function showMoreMenu(){
 </div>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){console.log('SW 注册失败（不影响使用）');});});}
-/* 全局外链拦截：App(PWA)内点外部链接强制在系统浏览器新开，防止困在当前窗口无法返回 */
+/* 全局外链拦截：App(PWA)内点外部链接 → 弹 App 内「外部链接」卡片，绝不真正离开 App（避免被系统踢回主屏） */
 document.addEventListener('click',function(ev){
   var a=ev.target.closest?ev.target.closest('a[href]'):null;
   if(!a)return;
@@ -2307,9 +2319,40 @@ document.addEventListener('click',function(ev){
   if(!/^https?:\/\//i.test(href))return;              /* 站内锚点等不拦 */
   if(href.indexOf(location.host)>-1)return;            /* 本站链接不拦 */
   ev.preventDefault();
-  var w=window.open(href,'_blank','noopener');
-  if(!w){location.href=href;}                          /* 弹窗被拦时兜底 */
+  openExternal(href,(a.getAttribute('data-label')||a.textContent||'外部链接').toString().trim());
 },true);
+/* 外部链接查看器：复制/打开都在 App 内完成，点 ✕ 永远留在应用，不会被踢出主屏 */
+function openExternal(url,label){
+  try{closeVid();}catch(e){}
+  var host='';try{host=new URL(url).hostname;}catch(e){}
+  var lab=(label&&label!=='外部链接')?label:(host||'外部链接');
+  $('extSite').textContent=lab;
+  var uu=$('extUrl');uu.textContent=url;uu.setAttribute('data-url',url);
+  $('extModal').classList.add('show');document.body.style.overflow='hidden';
+  window.__extUrl=url;
+}
+function closeExt(){$('extModal').classList.remove('show');document.body.style.overflow='';}
+function extOpen(){var u=window.__extUrl||'';if(!u)return;var w=window.open(u,'_blank','noopener');if(!w){location.href=u;}}
+function extCopy(){copyText(encodeURIComponent(window.__extUrl||''));}
 </script>
+
+<div class="modal-mask" id="extModal" onclick="if(event.target===this)closeExt()">
+  <div class="ext-box">
+    <div class="ext-head">
+      <span class="ext-title">↗ 外部链接</span>
+      <button class="ext-close" onclick="closeExt()" aria-label="关闭">×</button>
+    </div>
+    <div class="ext-body">
+      <div class="ext-site" id="extSite"></div>
+      <div class="ext-url" id="extUrl" onclick="extOpen()"></div>
+      <div class="ext-tip">此链接需在系统浏览器打开。建议先「复制链接」到其他 App 查看；或点「在浏览器打开」（会离开本应用，可随时重进工作台）。</div>
+      <div class="ext-actions">
+        <button class="btn primary" onclick="extOpen()">↗ 在浏览器打开</button>
+        <button class="btn ghost" onclick="extCopy()">📋 复制链接</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
