@@ -5,8 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#fff8f3">
+<meta name="theme-color" content="#ff7a5c">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="营地工作台">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-512.png">
 <title>营地运营工作台</title>
 <style>
 /* ========== CSS 变量 & 全局重置 ========== */
@@ -360,6 +363,19 @@ summary{font-size:12px;color:var(--primary);cursor:pointer;font-weight:600;}
 .vid-modal.show{display:flex;}
 .vid-modal-box{position:relative;width:100%;max-width:560px;aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5);}
 .vid-modal-iframe{width:100%;height:100%;border:0;}
+.vid-modal-box-inner{width:100%;height:100%;}
+.vid-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:24px;text-align:center;color:#fff;background:linear-gradient(135deg,#3a3f4b,#2a2e38);}
+.vid-empty-ic{font-size:40px;margin-bottom:8px;}
+.vid-empty-t{font-size:16px;font-weight:600;margin-bottom:6px;}
+.vid-empty-sub{font-size:12px;line-height:1.7;color:#cfd6e0;max-width:420px;}
+.vid-ext{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:24px;text-align:center;color:#fff;background:linear-gradient(135deg,#3a3f4b,#2a2e38);gap:8px;}
+.vid-ext-ic{font-size:38px;}
+.vid-ext-t{font-size:15px;font-weight:600;}
+.vid-ext-d{font-size:12px;color:#cfd6e0;margin-bottom:6px;}
+.vid-ext .btn{margin-top:4px;min-width:180px;text-decoration:none;}
+.vid-empty .btn{margin-top:12px;min-width:180px;text-decoration:none;}
+.vid-open-src{position:absolute;left:10px;bottom:10px;padding:5px 11px;border-radius:14px;background:rgba(0,0,0,.62);color:#fff;font-size:11px;text-decoration:none;z-index:3;backdrop-filter:blur(4px);}
+.vid-open-src:hover{background:rgba(0,0,0,.82);}
 .vid-modal-close{position:absolute;top:8px;right:10px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#222;font-size:20px;line-height:1;cursor:pointer;z-index:2;}
 .vid-body{padding:10px 12px 11px;}
 .vid-body .vplat{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;display:inline-block;margin-bottom:5px;}
@@ -1603,7 +1619,7 @@ function renderList(id,arr,key,fields){
     const isAdd=idx>=arr.length;
     let inner=`<span class="plat ${platClass(o.p)}">${o.p}</span><a class="ttl ttl-link" href="${linkFor(o)}" target="_blank" rel="noopener">${esc(o.t)} ↗</a>`;
     if(o.u){
-      inner+=`<div class="embed-vid vid-click" onclick="openVid('${esc(o.u)}')"><div class="vid-play"><div class="play-icon">▶</div></div><span class="vid-hint">点击图标看视频</span></div>`;
+      inner+=`<div class="embed-vid vid-click" onclick="openVid('${encodeURIComponent(o.u||'')}','${encodeURIComponent(o.p||'')}','${encodeURIComponent(o.t||'')}')"><div class="vid-play"><div class="play-icon">▶</div></div><span class="vid-hint">点击图标看视频</span></div>`;
     }
     if(fields==='material') inner+=`<p class="why">${esc(o.w)}</p><p class="dir">参考方向：${esc(o.d)}</p>`;
     else inner+=`<p class="c">${esc(o.c||o.w)}</p>`;
@@ -1692,8 +1708,72 @@ function delCustom(i){const arr=JSON.parse(localStorage.getItem('wb_custom')||'[
 
 /* ---------- 工具函数 ---------- */
 function esc(s){return (s||'').toString().replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
-function openVid(u){if(!u){alert('暂无视频源');return;}$('vidFrame').src=u;$('vidModal').classList.add('show');document.body.style.overflow='hidden';}
-function closeVid(){$('vidModal').classList.remove('show');$('vidFrame').src='';document.body.style.overflow='';}
+function decArg(x){try{return decodeURIComponent(x||'');}catch(e){return x||'';}}
+function searchUrl(plat,title){
+  const kw=encodeURIComponent(title||'');
+  if(plat==='小红书')return'https://www.xiaohongshu.com/search_result?keyword='+kw;
+  if(plat==='抖音')return'https://www.douyin.com/search/'+kw;
+  if(plat==='B站')return'https://search.bilibili.com/all?keyword='+kw;
+  if(plat==='快手')return'https://www.kuaishou.com/search/video?searchKey='+kw;
+  if(plat==='视频号')return'https://channels.weixin.qq.com/';
+  return'https://www.bing.com/search?q='+encodeURIComponent((title||'')+' '+(plat||''));
+}
+function openVid(u,p,t){
+  const box=$('vidFrameWrap');
+  const url=decArg(u),plat=decArg(p),title=decArg(t);
+  const e=vidEmbedInfo(url);
+  let html='';
+  if(e.type==='video'){
+    html='<video class="vid-modal-iframe" autoplay controls playsinline src="'+esc(e.url)+'"></video>';
+  }else if(e.type==='iframe'){
+    html='<iframe class="vid-modal-iframe" src="'+esc(e.url)+'" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media; fullscreen; picture-in-picture"></iframe>'
+      +'<a class="vid-open-src" href="'+esc(e.src||e.url)+'" target="_blank" rel="noopener">播放异常？去'+esc(e.plat||'原平台')+'看 ↗</a>';
+  }else if(e.type==='ext'){
+    html='<div class="vid-ext"><div class="vid-ext-ic">📱</div>'
+      +'<div class="vid-ext-t">'+esc(e.plat)+'不支持网页内嵌播放</div>'
+      +'<div class="vid-ext-d">该平台设置了防盗链，点下方按钮直接跳转观看</div>'
+      +'<a class="btn primary" href="'+esc(url)+'" target="_blank" rel="noopener">▶ 打开原视频 ↗</a>'
+      +'<button class="btn ghost" onclick="copyText(\''+encodeURIComponent(url)+'\')">📋 复制链接</button></div>';
+  }else{
+    const su=searchUrl(plat,title);
+    html='<div class="vid-empty"><div class="vid-empty-ic">🔍</div>'
+      +'<div class="vid-empty-t">这条暂无视频源</div>'
+      +'<div class="vid-empty-sub">可直接去'+esc(plat||'平台')+'搜索同款内容；或在数据里补一条可播放链接（mp4 直链 / B站 / 抖音 / 西瓜 / 腾讯 / 优酷 / YouTube 视频页均可自动内嵌）</div>'
+      +'<a class="btn primary" href="'+esc(su)+'" target="_blank" rel="noopener">🔎 去'+esc(plat||'平台')+'搜同款 ↗</a></div>';
+  }
+  box.innerHTML=html;
+  $('vidModal').classList.add('show');document.body.style.overflow='hidden';
+}
+function closeVid(){$('vidModal').classList.remove('show');const b=$('vidFrameWrap');if(b)b.innerHTML='';document.body.style.overflow='';}
+function vidEmbedInfo(u){
+  const s=String(u||'').trim(),low=s.toLowerCase();let m;
+  if(!s)return{type:'none'};
+  if(/\.(mp4|webm|ogg|mov|m3u8)(\?|#|$)/.test(low))return{type:'video',url:s,plat:'直链'};
+  /* 已经是官方播放器地址，直接嵌 */
+  if(low.includes('player.bilibili.com'))return{type:'iframe',url:s,plat:'B站'};
+  if(low.includes('open.douyin.com/player'))return{type:'iframe',url:s,plat:'抖音'};
+  if(low.includes('v.qq.com/txp/iframe'))return{type:'iframe',url:s,plat:'腾讯视频'};
+  if(low.includes('player.youku.com/embed'))return{type:'iframe',url:s,plat:'优酷'};
+  if(low.includes('ixigua.com/iframe'))return{type:'iframe',url:s,plat:'西瓜视频'};
+  if(low.includes('youtube.com/embed'))return{type:'iframe',url:s,plat:'YouTube'};
+  /* 普通视频页 → 自动转官方播放器 */
+  if(m=s.match(/youtu\.be\/([\w-]+)/))return{type:'iframe',url:'https://www.youtube.com/embed/'+m[1],plat:'YouTube',src:s};
+  if(m=s.match(/youtube\.com\/watch\?v=([\w-]+)/))return{type:'iframe',url:'https://www.youtube.com/embed/'+m[1],plat:'YouTube',src:s};
+  if(m=s.match(/bilibili\.com\/video\/(BV[\w]+)/i))return{type:'iframe',url:'https://player.bilibili.com/player.html?bvid='+m[1]+'&high_quality=1&danmaku=0&autoplay=0',plat:'B站',src:s};
+  if(m=s.match(/douyin\.com\/video\/(\d+)/))return{type:'iframe',url:'https://open.douyin.com/player/video?vid='+m[1]+'&autoplay=0',plat:'抖音',src:s};
+  if(m=s.match(/ixigua\.com\/(\d{6,})/))return{type:'iframe',url:'https://www.ixigua.com/iframe/'+m[1]+'?autoplay=0',plat:'西瓜视频',src:s};
+  if(m=s.match(/v\.qq\.com\/x\/(?:page|cover\/[\w]+)\/([\w]+)\.html/))return{type:'iframe',url:'https://v.qq.com/txp/iframe/player.html?vid='+m[1],plat:'腾讯视频',src:s};
+  if(m=s.match(/youku\.com\/v_show\/id_([\w=]+)/))return{type:'iframe',url:'https://player.youku.com/embed/'+m[1],plat:'优酷',src:s};
+  /* 平台禁止嵌入 → 跳转 */
+  let plat='该平台';
+  if(low.includes('douyin'))plat='抖音';
+  else if(low.includes('xiaohongshu')||low.includes('xhslink'))plat='小红书';
+  else if(low.includes('bilibili')||low.includes('b23.tv'))plat='B站';
+  else if(low.includes('kuaishou'))plat='快手';
+  else if(low.includes('weixin')||low.includes('channels')||low.includes('finder'))plat='视频号';
+  return{type:'ext',url:s,plat:plat};
+}
+function copyText(enc){const t=decodeURIComponent(enc);if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){alert('✅ 链接已复制');}).catch(function(){prompt('复制此链接：',t);});}else{prompt('复制此链接：',t);}}
 function renderLists(){renderList('graphic',GRAPHIC,'graphic');renderList('video',VIDEO,'video');renderList('copy',COPY,'copy');renderList('topic',TOPIC,'topic');renderList('team',TEAM,'team','material');}
 function addTeam(){const t=$('tT2').value.trim(),i=$('tI2').value.trim();if(!t){alert('先填主题');return;}const add=JSON.parse(localStorage.getItem('wb_add_team')||'[]');add.push({p:'团建',t,w:i,d:i});localStorage.setItem('wb_add_team',JSON.stringify(add));$('tT2').value='';$('tI2').value='';renderLists();}
 
@@ -1714,7 +1794,8 @@ function importAll(e){
 
 /* ---------- ⑨ 平台爆款二创 ---------- */
 let RECREATE=[
-  {p:"抖音",f:"美食饮品",rank:1,t:"沉浸式打工人早餐备菜",u:"https://www.douyin.com/video/xxx",likes:"32.8w",comments:"1.2w",shares:"5.6w",why:"真实生活场景+高效备菜技巧，打工人共鸣强"},
+  {p:"演示",f:"功能验证",rank:1,t:"▶ 视频播放功能演示（点我测试能否播放）",u:"https://www.w3schools.com/html/mov_bbb.mp4",likes:"—",comments:"—",shares:"—",why:"这是一条用于验证视频弹窗能否正常播放的演示视频，点开后应直接播放"},
+  {p:"抖音",f:"美食饮品",rank:1,t:"沉浸式打工人早餐备菜",u:"",likes:"32.8w",comments:"1.2w",shares:"5.6w",why:"真实生活场景+高效备菜技巧，打工人共鸣强"},
   {p:"抖音",f:"旅行露营",rank:2,t:"低成本露营改造挑战",u:"",likes:"28.3w",comments:"0.9w",shares:"4.2w",why:"反精致露营，用最少的钱搭出氛围感"},
   {p:"抖音",f:"创业搞钱",rank:3,t:"县城小生意月入过万",u:"",likes:"26.1w",comments:"1.1w",shares:"6.0w",why:"下沉市场创业故事，转发率高"},
   {p:"小红书",f:"美食饮品",rank:1,t:"我的100元江边野餐",u:"",likes:"15.6w",comments:"0.4w",shares:"2.1w",why:"高颜值摆拍+详细清单，收藏率极高"},
@@ -1737,9 +1818,10 @@ function switchRecreateTab(p,el){
 function renderVidCard(o,idx){
   const platCls={'抖音':'p-dy','小红书':'p-xhs','B站':'p-bili','视频号':'p-sph'}[o.p]||'p-dy';
   const hasVideo=!!o.u;
+  const args=`'${encodeURIComponent(o.u||'')}','${encodeURIComponent(o.p||'')}','${encodeURIComponent(o.t||'')}'`;
   const vidHtml=hasVideo
-    ?`<div class="vid-wrap vid-click" onclick="openVid('${esc(o.u)}')"><div class="vid-play"><div class="play-icon">▶</div></div><span class="vid-hint">点击图标看视频</span></div>`
-    :`<div class="vid-wrap"><div class="vid-placeholder"><div class="play-icon">▶</div><span style="font-size:10px;color:var(--sub)">暂无视频源</span></div></div>`;
+    ?`<div class="vid-wrap vid-click" onclick="openVid(${args})"><div class="vid-play"><div class="play-icon">▶</div></div><span class="vid-hint">点击图标看视频</span></div>`
+    :`<div class="vid-wrap vid-click" onclick="openVid(${args})"><div class="vid-placeholder"><div class="play-icon">🔎</div><span style="font-size:10px;color:var(--sub)">点击去${esc(o.p||'平台')}搜同款</span></div></div>`;
   return `<div class="vid-card" data-plat="${esc(o.p)}">
     ${vidHtml}
     <div class="vid-body">
@@ -2186,7 +2268,7 @@ function showMoreMenu(){
 <div id="vidModal" class="vid-modal" onclick="if(event.target===this)closeVid()">
   <div class="vid-modal-box">
     <button class="vid-modal-close" onclick="closeVid()" aria-label="关闭">×</button>
-    <iframe id="vidFrame" class="vid-modal-iframe" allowfullscreen referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin"></iframe>
+    <div id="vidFrameWrap" class="vid-modal-box-inner"></div>
   </div>
 </div>
 <!-- 学习计划弹窗 -->
@@ -2215,5 +2297,8 @@ function showMoreMenu(){
     <div class="modal-foot" id="aiSaveRow" style="display:none"><button class="btn primary" onclick="saveSmartToCustom()">💾 保存到自定义</button></div>
   </div>
 </div>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){console.log('SW 注册失败（不影响使用）');});});}
+</script>
 </body>
 </html>
