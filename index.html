@@ -242,6 +242,32 @@ input,textarea,[contenteditable]{user-select:text;-webkit-user-select:text;}
 .plan-modal.show{display:flex;}
 .plan-modal-box{position:relative;width:100%;max-width:520px;max-height:82vh;overflow:auto;background:var(--bg);border-radius:16px;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,.5);}
 .plan-modal-close{position:absolute;top:8px;right:10px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(0,0,0,.06);color:var(--txt);font-size:20px;line-height:1;cursor:pointer;z-index:2;}
+/* AI 弹窗 / 灵感弹窗 */
+.modal-h{font-size:15px;font-weight:700;margin-bottom:10px;padding-right:30px;}
+.modal-body{font-size:13px;line-height:1.6;color:var(--txt);}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;}
+.insp-v{font-size:13.5px;margin-bottom:4px;}
+.insp-stats{font-size:11.5px;color:var(--sub);margin-bottom:10px;}
+.insp-sec{margin-top:12px;}
+.insp-h{font-size:12.5px;font-weight:700;color:var(--primary);margin-bottom:5px;}
+.insp-t{font-size:13px;line-height:1.6;background:rgba(255,122,92,.06);border-radius:10px;padding:8px 10px;}
+.insp-ul{margin:0;padding-left:18px;}
+.insp-ul li{font-size:12.5px;line-height:1.7;margin-bottom:3px;}
+.ai-loading{font-size:13px;color:var(--sub);text-align:center;padding:28px 0;display:flex;align-items:center;justify-content:center;gap:8px;}
+.spin{width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--primary);border-radius:50%;display:inline-block;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.md h1,.md h2,.md h3,.md h4,.md h5,.md h6{font-size:14px;margin:12px 0 6px;color:var(--primary);}
+.md h1{font-size:16px;}
+.md ul{margin:6px 0;padding-left:20px;}
+.md li{font-size:12.5px;line-height:1.7;margin-bottom:3px;}
+.md b{color:#d9583a;}
+/* 我的页 AI 配置 */
+.ps-divider{height:1px;background:var(--line);margin:16px 0 12px;}
+.ps-sub{font-size:13px;font-weight:700;margin-bottom:10px;}
+.ps-row.col{flex-direction:column;align-items:stretch;gap:6px;}
+.ps-row.col label{font-size:12px;color:var(--sub);}
+.ai-input{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:13px;background:var(--bg);color:var(--txt);box-sizing:border-box;}
+.ai-input:focus{outline:none;border-color:var(--primary);}
 .plan-head{font-size:15px;font-weight:700;margin-bottom:4px;}
 .plan-sub{font-size:11.5px;color:var(--sub);font-weight:400;margin-bottom:6px;}
 .plan-sec{font-size:12.5px;font-weight:700;color:var(--primary);margin:14px 0 7px;}
@@ -337,12 +363,20 @@ summary{font-size:12px;color:var(--primary);cursor:pointer;font-weight:600;}
 .vid-modal-close{position:absolute;top:8px;right:10px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#222;font-size:20px;line-height:1;cursor:pointer;z-index:2;}
 .vid-body{padding:10px 12px 11px;}
 .vid-body .vplat{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;display:inline-block;margin-bottom:5px;}
+.vid-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:5px;}
+.vid-top .vrank{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:linear-gradient(135deg,#ffb347,#ff7a5c);color:#fff;}
+.vid-top .vfield{font-size:10px;padding:2px 7px;border-radius:20px;background:rgba(255,122,92,.1);color:var(--primary);font-weight:600;}
+.vid-actions{display:flex;gap:6px;margin-top:8px;}
 .vid-body .vtit{font-size:13px;font-weight:600;margin:0 0 5px;line-height:1.4;}
 .vid-body .vstats{font-size:10.5px;color:var(--sub);display:flex;gap:10px;margin-bottom:7px;}
 .vid-body .vstats span{display:flex;align-items:center;gap:3px;}
 .vid-actions{display:flex;gap:6px;}
 .vid-actions .vbtn{flex:1;border:1px solid var(--line);background:#fff;border-radius:18px;padding:6px 0;font-size:11px;cursor:pointer;text-align:center;transition:.2s;color:var(--primary);}
 .vid-actions .vbtn.accent{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-color:transparent;}
+.vid-actions .vbtn.money{background:linear-gradient(135deg,#ffd166,#ff9a3c);color:#5a3a00;border-color:transparent;font-weight:700;}
+.money-daily{margin-top:18px;padding:16px;background:linear-gradient(135deg,rgba(255,209,102,.18),rgba(255,154,60,.12));border-radius:16px;}
+.money-daily .md-h{font-size:15px;font-weight:800;color:#b9760a;}
+.money-daily .md-sub{font-size:12px;color:var(--sub);margin:4px 0 12px;line-height:1.5;}
 
 /* 内嵌视频 */
 .card .embed-vid{width:100%;border-radius:12px;overflow:hidden;margin:6px 0 8px;background:#000;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;}
@@ -647,7 +681,7 @@ summary{font-size:12px;color:var(--primary);cursor:pointer;font-weight:600;}
         <input id="vI" placeholder="灵感/为什么爆">
         <button class="btn primary" onclick="addItem('video','vT','vI')">+ 补充</button>
       </div>
-      <div class="note">参考方向来自近期趋势：轻量化露营、森系视觉先行、村溪地域IP、日归/电车露营。</div>
+      <div class="note">参考方向来自近期趋势：轻量化露营、森系视觉先行、村溪地域IP、日归/电车露营。每条素材可点「💡获取灵感 / ✨智能二创」生成营地+IP打造向方案。</div>
     </div>
   </div>
 
@@ -727,8 +761,8 @@ summary{font-size:12px;color:var(--primary);cursor:pointer;font-weight:600;}
   <!-- ===== 页面：⑨ 平台爆款二创 ===== -->
   <div class="page" id="page-recreate">
     <div class="module-page">
-      <div class="mp-header">🎯 平台爆款二创</div>
-      <div class="mp-desc">各平台 2 条 · 视频直展 · 智能二创</div>
+      <div class="mp-header">🎯 平台爆款内容</div>
+      <div class="mp-desc">当日各平台各领域 TOP3 · 视频直展 · 智能二创</div>
       <div class="mat-tabs" id="recreateTabs">
         <span class="mat-tab active" onclick="switchRecreateTab('all',this)">全部</span>
         <span class="mat-tab" onclick="switchRecreateTab('抖音',this)">抖音</span>
@@ -737,7 +771,13 @@ summary{font-size:12px;color:var(--primary);cursor:pointer;font-weight:600;}
         <span class="mat-tab" onclick="switchRecreateTab('视频号',this)">视频号</span>
       </div>
       <div class="vid-grid scroll" id="recreateGrid" style="max-height:480px"></div>
-      <div class="note">每日从各平台筛选 2 条最新爆款视频，数据由 AI 每日 08:00 自动刷新。</div>
+      <div class="note">每日从各平台筛选各领域 TOP3 爆款视频，数据由 AI 每日 08:00 自动刷新。</div>
+      <div class="money-daily">
+        <div class="md-h">💰 每日搞钱灵感</div>
+        <div class="md-sub">基于今日各平台 TOP3 爆款，自动提炼蝴蝶谷营地最值得跟的搞钱方向 + 本周行动清单</div>
+        <button class="btn primary" onclick="moneyDaily()">✨ 生成今日搞钱灵感</button>
+        <div class="note">需先在「我的 → AI 二创配置」填 Key；生成后可一键存到自定义模块。</div>
+      </div>
     </div>
   </div>
 
@@ -902,6 +942,25 @@ summary{font-size:12px;color:var(--primary);cursor:pointer;font-weight:600;}
           <span>清除本地缓存</span>
           <button class="ps-action" style="color:var(--primary);" onclick="if(confirm('确定清除所有本地数据？')){localStorage.clear();location.reload();}">清除</button>
         </div>
+        <div class="ps-divider"></div>
+        <div class="ps-sub">🤖 AI 二创配置</div>
+        <div class="ps-row col">
+          <label>API Key</label>
+          <input id="aiKey" type="password" class="ai-input" placeholder="sk-...（仅存本机，只发往你填的接口）">
+        </div>
+        <div class="ps-row col">
+          <label>接口地址</label>
+          <input id="aiBase" class="ai-input" placeholder="https://api.deepseek.com">
+        </div>
+        <div class="ps-row col">
+          <label>模型名</label>
+          <input id="aiModel" class="ai-input" placeholder="deepseek-chat">
+        </div>
+        <div class="ps-row">
+          <span></span>
+          <button class="ps-action" onclick="saveAI()">保存配置</button>
+        </div>
+        <div class="note" style="margin-top:8px">支持任意 OpenAI 兼容接口（DeepSeek / 通义 / 智谱 / 混元等）。Key 仅保存在本机 localStorage，不会上传到除你填写接口以外的任何地方。</div>
       </div>
       <div class="note" style="margin-top:16px;">
         💡 <b>使用提示：</b><br>
@@ -972,7 +1031,7 @@ const PAGE_TITLES={
   home:'营地运营工作台', modules:'全部模块', quick:'快捷操作',
   courses:'运营能力成长', sop:'每日运营SOP', materials:'爆款素材学习',
   copy:'爆款文案灵感', topic:'讨论性话题', priv:'私域群文案',
-  team:'团建活动推送', custom:'自定义模块', recreate:'平台爆款二创',
+  team:'团建活动推送', custom:'自定义模块', recreate:'平台爆款内容',
   mat:'营地物料统计', prod:'产品区·饮品推荐', cloud:'云端同步', profile:'我的'
 };
 
@@ -1019,7 +1078,7 @@ const MENU_ITEMS=[
   {id:'topic', icon:'💬', name:'讨论性话题'},
   {id:'priv', icon:'💬', name:'私域群文案', badgeKey:'priv'},
   {id:'team', icon:'🏢', name:'团建活动推送'},
-  {id:'recreate', icon:'🎯', name:'平台爆款二创'},
+  {id:'recreate', icon:'🎯', name:'平台爆款内容'},
   {id:'mat', icon:'📦', name:'营地物料统计'},
   {id:'prod', icon:'🍹', name:'产品区·饮品推荐'},
   {id:'custom', icon:'📝', name:'自定义模块', badgeKey:'custom'}
@@ -1086,7 +1145,7 @@ const MODULE_TILES=[
   {id:'topic', icon:'💬', name:'讨论性话题', desc:'养IP账号'},
   {id:'priv', icon:'💌', name:'私域群文案', desc:'每日分享素材'},
   {id:'team', icon:'🏢', name:'团建活动推送', desc:'B端拓客灵感'},
-  {id:'recreate', icon:'🎯', name:'平台爆款二创', desc:'视频直展+智能二创'},
+  {id:'recreate', icon:'🎯', name:'平台爆款内容', desc:'各领域TOP3+智能二创'},
   {id:'mat', icon:'📦', name:'营地物料统计', desc:'库存·损耗·预警'},
   {id:'prod', icon:'🍹', name:'产品区·饮品推荐', desc:'配方·成本·利润'},
   {id:'custom', icon:'📝', name:'自定义模块', desc:'随你记'}
@@ -1548,6 +1607,7 @@ function renderList(id,arr,key,fields){
     }
     if(fields==='material') inner+=`<p class="why">${esc(o.w)}</p><p class="dir">参考方向：${esc(o.d)}</p>`;
     else inner+=`<p class="c">${esc(o.c||o.w)}</p>`;
+    if(key==='video'||key==='graphic') inner+=`<div class="vid-actions"><button class="vbtn" onclick="openInsp('${key}',${idx})">💡 获取灵感</button><button class="vbtn accent" onclick="smartCreate('${key}',${idx})">✨ 智能二创</button></div>`;
     if(isAdd) inner+=`<span class="x" onclick="delAdd('${key}',${idx-arr.length})">×</span>`;
     return `<div class="card">${inner}</div>`;
   }).join('')||'<div class="note">暂无，去下方补充一条吧～</div>';
@@ -1654,14 +1714,18 @@ function importAll(e){
 
 /* ---------- ⑨ 平台爆款二创 ---------- */
 let RECREATE=[
-  {p:"抖音",t:"沉浸式打工人早餐备菜",u:"https://www.douyin.com/video/xxx",likes:"32.8w",comments:"1.2w",shares:"5.6w",why:"真实生活场景+高效备菜技巧，打工人共鸣强"},
-  {p:"抖音",t:"低成本露营改造挑战",u:"",likes:"28.3w",comments:"0.9w",shares:"4.2w",why:"反精致露营，用最少的钱搭出氛围感"},
-  {p:"小红书",t:"我的100元江边野餐",u:"",likes:"15.6w",comments:"0.4w",shares:"2.1w",why:"高颜值摆拍+详细清单，收藏率极高"},
-  {p:"小红书",t:"手作柠檬茶摊日记Day30",u:"",likes:"12.3w",comments:"0.8w",shares:"3.5w",why:"创业连载IP，真实收入透明"},
-  {p:"B站",t:"手机拍电影感·江边日落",u:"",likes:"9.2w",comments:"0.3w",shares:"1.8w",why:"零设备教学，实操性强"},
-  {p:"B站",t:"从0开始做饮品摊·成本全算",u:"",likes:"7.8w",comments:"0.5w",shares:"2.2w",why:"透明账本+配方公开，创业者必看"},
-  {p:"视频号",t:"县城小生意月入过万",u:"",likes:"11.4w",comments:"0.6w",shares:"4.0w",why:"下沉市场创业故事，转发率高"},
-  {p:"视频号",t:"周末逃离城市计划",u:"",likes:"8.7w",comments:"0.3w",shares:"2.8w",why:"情绪价值+地域推荐，适合营地借鉴"}
+  {p:"抖音",f:"美食饮品",rank:1,t:"沉浸式打工人早餐备菜",u:"https://www.douyin.com/video/xxx",likes:"32.8w",comments:"1.2w",shares:"5.6w",why:"真实生活场景+高效备菜技巧，打工人共鸣强"},
+  {p:"抖音",f:"旅行露营",rank:2,t:"低成本露营改造挑战",u:"",likes:"28.3w",comments:"0.9w",shares:"4.2w",why:"反精致露营，用最少的钱搭出氛围感"},
+  {p:"抖音",f:"创业搞钱",rank:3,t:"县城小生意月入过万",u:"",likes:"26.1w",comments:"1.1w",shares:"6.0w",why:"下沉市场创业故事，转发率高"},
+  {p:"小红书",f:"美食饮品",rank:1,t:"我的100元江边野餐",u:"",likes:"15.6w",comments:"0.4w",shares:"2.1w",why:"高颜值摆拍+详细清单，收藏率极高"},
+  {p:"小红书",f:"旅行露营",rank:2,t:"公园20分钟回血效应",u:"",likes:"13.9w",comments:"0.5w",shares:"1.7w",why:"席地而坐治愈回血，轻量化出圈"},
+  {p:"小红书",f:"创业搞钱",rank:3,t:"手作柠檬茶摊日记Day30",u:"",likes:"12.3w",comments:"0.8w",shares:"3.5w",why:"创业连载IP，真实收入透明"},
+  {p:"B站",f:"美食饮品",rank:1,t:"从0开始做饮品摊·成本全算",u:"",likes:"9.8w",comments:"0.6w",shares:"2.4w",why:"透明账本+配方公开，创业者必看"},
+  {p:"B站",f:"旅行露营",rank:2,t:"手机拍电影感·江边日落",u:"",likes:"9.2w",comments:"0.3w",shares:"1.8w",why:"零设备教学，实操性强"},
+  {p:"B站",f:"创业搞钱",rank:3,t:"毕业一年我开了家营地",u:"",likes:"8.1w",comments:"0.7w",shares:"3.0w",why:"真实创业复盘，干货+情绪双高"},
+  {p:"视频号",f:"美食饮品",rank:1,t:"周末逃离城市计划",u:"",likes:"8.7w",comments:"0.3w",shares:"2.8w",why:"情绪价值+地域推荐，适合营地借鉴"},
+  {p:"视频号",f:"旅行露营",rank:2,t:"江畔村晚·露营+音乐",u:"",likes:"10.2w",comments:"0.5w",shares:"3.6w",why:"老洲乡村晚模式，沉浸田园氛围拉满"},
+  {p:"视频号",f:"创业搞钱",rank:3,t:"9.9入场券是割韭菜吗",u:"",likes:"11.4w",comments:"0.6w",shares:"4.0w",why:"定价争议+透明账本，引评论区吵架=流量"}
 ];
 let _recreateFilter='all';
 function switchRecreateTab(p,el){
@@ -1670,7 +1734,7 @@ function switchRecreateTab(p,el){
   el.classList.add('active');
   renderRecreate();
 }
-function renderVidCard(o){
+function renderVidCard(o,idx){
   const platCls={'抖音':'p-dy','小红书':'p-xhs','B站':'p-bili','视频号':'p-sph'}[o.p]||'p-dy';
   const hasVideo=!!o.u;
   const vidHtml=hasVideo
@@ -1679,21 +1743,228 @@ function renderVidCard(o){
   return `<div class="vid-card" data-plat="${esc(o.p)}">
     ${vidHtml}
     <div class="vid-body">
-      <span class="vplat ${platCls}">${esc(o.p)}</span>
+      <div class="vid-top"><span class="vrank">TOP ${o.rank||''}</span><span class="vplat ${platCls}">${esc(o.p)}</span><span class="vfield">${esc(o.f||'')}</span></div>
       <div class="vtit">${esc(o.t)}</div>
       <div class="vstats"><span>👍${esc(o.likes)}</span><span>💬${esc(o.comments)}</span><span>↗${esc(o.shares)}</span></div>
       <div class="vid-actions">
-        <button class="vbtn" onclick="alert('💡 灵感提取：\\n${esc(o.why)}\\n\\n可二创方向：把场景换成蝴蝶谷营地版本')">💡 获取灵感</button>
-        <button class="vbtn accent">✨ 智能二创</button>
+        <button class="vbtn" onclick="openInsp('recreate',${idx})">💡 获取灵感</button>
+        <button class="vbtn accent" onclick="smartCreate('recreate',${idx})">✨ 智能二创</button>
+        <button class="vbtn money" onclick="moneyIdea('recreate',${idx})">💰搞钱灵感</button>
       </div>
     </div>
   </div>`;
 }
 function renderRecreate(){
   const arr=_recreateFilter==='all'?RECREATE:RECREATE.filter(o=>o.p===_recreateFilter);
-  $('recreateGrid').innerHTML=arr.map(renderVidCard).join('')||'<div class="note">暂无该平台数据</div>';
+  $('recreateGrid').innerHTML=arr.map(o=>renderVidCard(o, RECREATE.indexOf(o))).join('')||'<div class="note">暂无该平台数据</div>';
 }
 
+/* ---------- ⑨ 获取灵感 + 智能二创 (AI) ---------- */
+let _curInsp=null, _curSmart='', _curSmartTitle='';
+const RECREATE_CTX='蝴蝶谷营地（江边营地，主营手打柠檬茶/气泡水/冰美式等饮品摊，有天幕、帐篷、日落江景，目标客群 25-35 岁城市年轻人）。';
+const CAMP_CTX='蝴蝶谷营地（江边营地，主打「松弛半日」体验 + 主理人 IP 打造）。内容方向：营地场景内容（天幕/日落/江景/星空）、主理人创业日记（从0到1、透明账本）、地域 IP（蝴蝶谷/江畔村晚）、改造连载，以及用讨论性话题养 IP。客群 25-35 岁城市年轻人，追求松弛感与情绪价值。';
+function getAI(){try{return JSON.parse(localStorage.getItem('wb_ai')||'{}');}catch(e){return {};}}
+function renderAIConfig(){
+  const a=getAI();
+  if($('aiKey')) $('aiKey').value=a.key||'';
+  if($('aiBase')) $('aiBase').value=a.base||'https://api.deepseek.com';
+  if($('aiModel')) $('aiModel').value=a.model||'deepseek-chat';
+}
+function saveAI(){
+  const a={key:($('aiKey').value||'').trim(),base:($('aiBase').value||'').trim()||'https://api.deepseek.com',model:($('aiModel').value||'').trim()||'deepseek-chat'};
+  localStorage.setItem('wb_ai',JSON.stringify(a));
+  alert('✅ AI 二创配置已保存到本机');
+}
+function themeOf(src){return src==='recreate'?'recreate':'camp';}
+function ctxOf(theme){return theme==='recreate'?RECREATE_CTX:CAMP_CTX;}
+function lookupItem(src,idx){
+  const base={recreate:RECREATE,video:VIDEO,graphic:GRAPHIC}[src]||RECREATE;
+  if(idx<base.length) return base[idx];
+  const add=JSON.parse(localStorage.getItem('wb_add_'+src)||'[]');
+  return add[idx-base.length];
+}
+function inspElems(o){
+  const w=(o.why||'');
+  const map=[
+    [/(场景|生活|真实|露营|野餐|江边|营地)/,'场景共鸣：把真实生活画面搬到蝴蝶谷营地'],
+    [/(摆拍|颜值|高颜|精致|视觉)/,'视觉优先：用天幕+日落江景做高颜值构图'],
+    [/(教学|教程|实操|透明|公开|算账)/,'干货信任：公开配方/成本，建立专业人设'],
+    [/(创业|连载|收入|小生意|月入)/,'IP连载：做「营地主理人Day N」成长日记'],
+    [/(情绪|治愈|逃离|破防|泪目)/,'情绪价值：用日落/星空触发「逃离城市」共鸣'],
+    [/(挑战|反差|变身|改造)/,'互动挑战：发起低成本改造/反差挑战']
+  ];
+  const pts=map.filter(m=>m[0].test(w)).map(m=>m[1]);
+  if(!pts.length) pts.push('提炼该爆款最打动人的 1 个核心点，移植到营地语境');
+  return pts;
+}
+function openInsp(src,idx){
+  const o=lookupItem(src,idx); if(!o)return;
+  const theme=themeOf(src);
+  _curInsp={o,src,theme};
+  const pts=inspElems(o);
+  const localMap=theme==='recreate'
+    ? '把《'+o.t+'》的爆点换成蝴蝶谷营地版本：场景→江边营地/天幕日落；人设→营地主理人；产品→手打柠檬茶/气泡水/冰美式；客群→25-35岁城市年轻人。'
+    : '把《'+o.t+'》移植为蝴蝶谷营地内容：场景→江边天幕/日落/星空；人设→「松弛半日」主理人；内容→创业日记/透明账本/改造连载；用讨论性话题养IP，而非硬广。';
+  const campNote=theme==='camp'
+    ? `<div class="insp-sec"><div class="insp-h">🪪 IP 打造视角</div><div class="insp-t">人设定位：把主理人打造成「松弛半日主理人」IP，用创业日记 + 透明账本持续养粉；内容做系列化（Day N）降低创作压力，用争议性话题引评论。</div></div>`
+    : '';
+  const sharesNum=parseFloat((o.shares||'0').replace(/[^\d.]/g,''))||0;
+  const verdict=sharesNum>3?'转发率突出，适合做「挑战/合拍/反差」类二创。':'收藏向选题，适合做「教程/清单」类二创。';
+  $('inspTitle').textContent='💡 灵感拆解 · '+o.p;
+  $('inspBody').innerHTML=`
+    <div class="insp-v"><b>🎯 爆款标题：</b>${esc(o.t)}</div>
+    <div class="insp-stats">👍${esc(o.likes||'—')} · 💬${esc(o.comments||'—')} · ↗${esc(o.shares||'—')}</div>
+    <div class="insp-sec"><div class="insp-h">🔥 爆火内核</div><div class="insp-t">${esc(o.why||'—')}</div></div>
+    <div class="insp-sec"><div class="insp-h">🧩 可借鉴要素</div><ul class="insp-ul">${pts.map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div>
+    <div class="insp-sec"><div class="insp-h">🦋 本地化映射</div><div class="insp-t">${esc(localMap)}</div></div>
+    ${campNote}
+    <div class="insp-sec"><div class="insp-h">📊 数据佐证</div><div class="insp-t">高赞+高转发说明该选题「共鸣强+易传播」，${esc(verdict)}</div></div>
+  `;
+  $('inspModal').classList.add('show');
+}
+function saveInspToCustom(){
+  if(!_curInsp)return;
+  const o=_curInsp.o, theme=_curInsp.theme;
+  const pts=inspElems(o);
+  const tail=theme==='camp'?'本地化：把场景换成蝴蝶谷营地（江边天幕/日落/星空）+ 主理人IP打造（创业日记/透明账本）':'本地化：把场景换成蝴蝶谷营地（江边/天幕日落/柠檬茶摊）';
+  const c='平台：'+o.p+'\n爆款：'+o.t+'\n爆火内核：'+(o.why||'')+'\n可借鉴：'+pts.join('；')+'\n'+tail;
+  saveToCustom((theme==='camp'?'💡营地灵感·':'💡灵感·')+o.t, c);
+  alert('✅ 已收藏到「自定义模块」');
+  closeModal('inspModal');
+}
+async function aiGen(system, user){
+  const a=getAI();
+  if(!a.key){ alert('请先在「我的 → AI 二创配置」填写 API Key'); return null; }
+  const base=(a.base||'https://api.deepseek.com').replace(/\/$/,'');
+  try{
+    const r=await fetch(base+'/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+a.key},
+      body:JSON.stringify({model:a.model||'deepseek-chat',messages:[{role:'system',content:system},{role:'user',content:user}],temperature:0.8,stream:false})
+    });
+    if(!r.ok){ const t=await r.text(); throw new Error('接口返回 '+r.status+'：'+t.slice(0,140)); }
+    const j=await r.json();
+    return (j.choices&&j.choices[0]&&j.choices[0].message.content)||'';
+  }catch(e){
+    let msg=e.message||String(e);
+    if(/Failed to fetch|NetworkError|CORS/i.test(msg)){
+      msg='网络/CORS 被拦截。请确认：①接口地址正确 ②该接口允许浏览器跨域(CORS) ③网络可访问。可改用支持 CORS 的兼容接口或自建代理。';
+    }
+    alert('⚠️ AI 生成失败：'+msg);
+    return null;
+  }
+}
+async function smartCreate(src,idx){
+  const o=lookupItem(src,idx); if(!o)return;
+  const theme=themeOf(src);
+  _curSmartTitle=o.t; _curSmartKind=theme;
+  $('aiModal').classList.add('show');
+  $('aiTitle').textContent='✨ 智能二创 · '+o.p;
+  $('aiLoading').style.display='block';
+  $('aiResult').style.display='none';
+  $('aiResult').innerHTML='';
+  $('aiSaveRow').style.display='none';
+  const sys=theme==='recreate'
+    ? '你是资深短视频运营专家，擅长把爆款视频二次创作为营地饮品摊的本地化内容。请用 Markdown 结构化输出，可直接执行。'
+    : '你是资深营地 IP 运营专家，擅长把爆款内容转化为「营地场景 + 主理人 IP 打造」的系列化内容。请用 Markdown 结构化输出，可直接执行。';
+  const focus=theme==='recreate'
+    ? '产出「智能二创方案」（饮品摊向）：分镜脚本、分平台文案、拍摄清单、发布建议。'
+    : '产出「营地 IP 二创方案」：①如何把该爆点转化为营地场景内容 ②主理人 IP 人设与系列化（Day N 创业日记/透明账本）③用什么讨论性话题养 IP ④分平台标题与文案 ⑤拍摄清单与发布建议。';
+  const user='参考爆款视频：\n平台：'+o.p+'\n标题：'+o.t+'\n爆火原因：'+(o.why||'')+'\n数据：点赞'+(o.likes||'—')+' 评论'+(o.comments||'—')+' 转发'+(o.shares||'—')+'\n\n营地背景：'+ctxOf(theme)+'\n\n请基于该爆款'+focus;
+  const out=await aiGen(sys,user);
+  $('aiLoading').style.display='none';
+  if(out){
+    _curSmart='【智能'+(theme==='camp'?'营地IP二创':'二创')+'方案】\n参考爆款：'+o.p+'《'+o.t+'》\n\n'+out;
+    $('aiResult').innerHTML='<div class="md">'+mdToHtml(out)+'</div>';
+    $('aiResult').style.display='block';
+    $('aiSaveRow').style.display='flex';
+  }else{
+    $('aiResult').style.display='block';
+    $('aiResult').innerHTML='<div class="note">生成失败，请检查 AI 配置或网络后重试。</div>';
+    $('aiSaveRow').style.display='none';
+  }
+}
+let _curSmartKind='recreate';
+function saveSmartToCustom(){
+  if(!_curSmart)return;
+  const pre=_curSmartKind==='money'?'💰搞钱·':(_curSmartKind==='camp'?'✨营地IP二创·':'✨二创·');
+  saveToCustom(pre+_curSmartTitle, _curSmart);
+  alert('✅ 已保存到「自定义模块」');
+  closeModal('aiModal');
+}
+async function moneyIdea(src,idx){
+  const o=lookupItem(src,idx); if(!o)return;
+  _curSmartTitle=o.t; _curSmartKind='money';
+  $('aiModal').classList.add('show');
+  $('aiTitle').textContent='💰 搞钱灵感 · '+o.p;
+  $('aiLoading').style.display='block';
+  $('aiResult').style.display='none';
+  $('aiResult').innerHTML='';
+  $('aiSaveRow').style.display='none';
+  const sys='你是营地经营变现顾问，擅长把爆款内容转化为蝴蝶谷营地可落地的赚钱方案。请用 Markdown 结构化输出，可直接执行。';
+  const user='参考爆款视频：\n平台：'+o.p+'\n标题：'+o.t+'\n爆火原因：'+(o.why||'')+'\n数据：点赞'+(o.likes||'—')+' 评论'+(o.comments||'—')+' 转发'+(o.shares||'—')+'\n\n营地背景：'+CAMP_CTX+'\n\n请基于该爆款产出「搞钱灵感方案」，严格按以下结构输出：\n1. 变现路径拆解（从团购套餐/饮品售卖/周边/体验课/场地包场/B端团建中挑最匹配的2-3条，说明怎么接）\n2. 低成本试水方案（最小成本验证步骤+预算，先小步验证不盲目投入）\n3. 定价 & 透明账本（参考爆款定价争议，给定价策略+成本/毛利账本模板）\n4. 二创变现脚本（钩子→信任→转化CTA + 分平台文案）';
+  const out=await aiGen(sys,user);
+  $('aiLoading').style.display='none';
+  if(out){
+    _curSmart='【搞钱灵感方案】\n参考爆款：'+o.p+'《'+o.t+'》\n\n'+out;
+    $('aiResult').innerHTML='<div class="md">'+mdToHtml(out)+'</div>';
+    $('aiResult').style.display='block';
+    $('aiSaveRow').style.display='flex';
+  }else{
+    $('aiResult').style.display='block';
+    $('aiResult').innerHTML='<div class="note">生成失败，请检查 AI 配置或网络后重试。</div>';
+    $('aiSaveRow').style.display='none';
+  }
+}
+async function moneyDaily(){
+  _curSmartTitle='今日搞钱灵感'; _curSmartKind='money';
+  $('aiModal').classList.add('show');
+  $('aiTitle').textContent='💰 每日搞钱灵感';
+  $('aiLoading').style.display='block';
+  $('aiResult').style.display='none';
+  $('aiResult').innerHTML='';
+  $('aiSaveRow').style.display='none';
+  const top=RECREATE.slice(0,9).map(o=>'· '+o.p+'《'+o.t+'》('+o.f+')：'+(o.why||'')).join('\n');
+  const sys='你是营地经营变现顾问，擅长从爆款趋势提炼可落地的赚钱方向。请用 Markdown 结构化输出。';
+  const user='今日各平台 TOP3 爆款（含领域与爆火原因）：\n'+top+'\n\n营地背景：'+CAMP_CTX+'\n\n请产出「今日搞钱灵感简报」：\n1. 最值得跟的 3 条搞钱方向（对应上面哪个爆款+为什么适合蝴蝶谷营地）\n2. 每条方向的变现路径（套餐/饮品/周边/体验课/包场/团建）\n3. 本周行动清单（按优先级3-5项）';
+  const out=await aiGen(sys,user);
+  $('aiLoading').style.display='none';
+  if(out){
+    _curSmart='【今日搞钱灵感简报】\n\n'+out;
+    $('aiResult').innerHTML='<div class="md">'+mdToHtml(out)+'</div>';
+    $('aiResult').style.display='block';
+    $('aiSaveRow').style.display='flex';
+  }else{
+    $('aiResult').style.display='block';
+    $('aiResult').innerHTML='<div class="note">生成失败，请检查 AI 配置或网络后重试。</div>';
+    $('aiSaveRow').style.display='none';
+  }
+}
+function saveToCustom(t,c){
+  const arr=JSON.parse(localStorage.getItem('wb_custom')||'[]');
+  arr.unshift({t:t,c:c});
+  localStorage.setItem('wb_custom',JSON.stringify(arr));
+  if($('custom')) renderCustom();
+}
+function closeModal(id){
+  const el=$(id); if(el){ el.classList.remove('show'); }
+}
+function mdToHtml(md){
+  let s=esc(md);
+  s=s.replace(/^###### (.*)$/gm,'<h6>$1</h6>')
+      .replace(/^##### (.*)$/gm,'<h5>$1</h5>')
+      .replace(/^#### (.*)$/gm,'<h4>$1</h4>')
+      .replace(/^### (.*)$/gm,'<h3>$1</h3>')
+      .replace(/^## (.*)$/gm,'<h2>$1</h2>')
+      .replace(/^# (.*)$/gm,'<h1>$1</h1>')
+      .replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+      .replace(/\*(.+?)\*/g,'<i>$1</i>')
+      .replace(/^- (.*)$/gm,'<li>$1</li>')
+      .replace(/(<li>[\s\S]*?<\/li>)/g,'<ul>$1</ul>')
+      .replace(/\n{2,}/g,'<br><br>')
+      .replace(/\n/g,'<br>');
+  return s;
+}
 /* ---------- ⑩ 营地物料统计 ---------- */
 const MAT_DEFAULTS=[
   {name:"黄柠檬",cat:"饮品原料",stock:5,unit:"kg",safe:2,price:12,daily:0.5,loss:0.05},
@@ -1885,6 +2156,7 @@ function showMoreMenu(){
 
   // 首页数据
   renderHome();
+  renderAIConfig();
 
   // 云端初始化
   if(cloudOn()){
@@ -1922,6 +2194,25 @@ function showMoreMenu(){
   <div class="plan-modal-box">
     <button class="plan-modal-close" onclick="closePlan()" aria-label="关闭">×</button>
     <div id="planBody"></div>
+  </div>
+</div>
+<!-- 灵感拆解弹窗 -->
+<div id="inspModal" class="plan-modal" onclick="if(event.target===this)closeModal('inspModal')">
+  <div class="plan-modal-box">
+    <button class="plan-modal-close" onclick="closeModal('inspModal')" aria-label="关闭">×</button>
+    <div class="modal-h" id="inspTitle"></div>
+    <div class="modal-body" id="inspBody"></div>
+    <div class="modal-foot"><button class="btn primary" onclick="saveInspToCustom()">⭐ 收藏到自定义</button></div>
+  </div>
+</div>
+<!-- 智能二创弹窗 -->
+<div id="aiModal" class="plan-modal" onclick="if(event.target===this)closeModal('aiModal')">
+  <div class="plan-modal-box">
+    <button class="plan-modal-close" onclick="closeModal('aiModal')" aria-label="关闭">×</button>
+    <div class="modal-h" id="aiTitle"></div>
+    <div id="aiLoading" class="ai-loading">🤖 AI 正在生成二创方案…<span class="spin"></span></div>
+    <div class="modal-body" id="aiResult"></div>
+    <div class="modal-foot" id="aiSaveRow" style="display:none"><button class="btn primary" onclick="saveSmartToCustom()">💾 保存到自定义</button></div>
   </div>
 </div>
 </body>
