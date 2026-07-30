@@ -159,7 +159,7 @@
       <button class="btn primary" onclick="location.reload()">↻ 刷新</button>
     </div>
   </div>
-  <div class="meta"><span id="cloudStat" class="cloud-dot"></span><span id="cloudText" style="font-size:11px;color:var(--sub)">未启用云端</span> ｜ 📅 <span id="today"></span> ｜ 爆款素材由 AI 每日抓取近期平台趋势自动刷新（更新于 2026-07-30）｜ 各模块也可手动补充</div>
+  <div class="meta"><span id="cloudStat" class="cloud-dot"></span><span id="cloudText" style="font-size:11px;color:var(--sub)">未启用云端</span> ｜ 📅 <span id="today"></span> ｜ 爆款素材由 AI 每日抓取近期平台趋势自动刷新（<span id="cloudContent">更新于 2026-07-30</span>）｜ 各模块也可手动补充</div>
 </header>
 
 <main>
@@ -347,6 +347,26 @@ async function cloudPull(){
   }catch(e){cloudStat('拉取错误：'+e.message,'err');}
 }
 function renderAll(){renderCourses();renderSop();renderLists();renderPriv();renderCustom();}
+/* 每日内容（爆款/文案/话题/团建 + cc3/cc4 课程），由自动化每日08:00写入公开Gist，页面启动即拉取，无需token */
+const CONTENT_GIST='4fd19f4f463581e286634532e128fd46';
+async function loadCloudContent(){
+  try{
+    const res=await fetch('https://api.github.com/gists/'+CONTENT_GIST+'?files=content.json',{cache:'no-store'});
+    if(!res.ok)return;
+    const j=await res.json();
+    const f=j.files&&j.files['content.json'];if(!f||!f.content)return;
+    const ct=JSON.parse(f.content);
+    if(Array.isArray(ct.GRAPHIC))GRAPHIC=ct.GRAPHIC;
+    if(Array.isArray(ct.VIDEO))VIDEO=ct.VIDEO;
+    if(Array.isArray(ct.COPY))COPY=ct.COPY;
+    if(Array.isArray(ct.TOPIC))TOPIC=ct.TOPIC;
+    if(Array.isArray(ct.TEAM))TEAM=ct.TEAM;
+    if(ct.COURSES_CC&&Array.isArray(COURSES)){COURSES.forEach((c2,i)=>{if(ct.COURSES_CC[c2.id])COURSES[i]=ct.COURSES_CC[c2.id];});}
+    if(ct.updated){const m=$('cloudContent');if(m)m.textContent='云端更新于 '+ct.updated;}
+    renderLists();renderCourses();
+  }catch(e){/* 云端内容缺失则保留本地默认 */ }
+}
+function startContentTimer(){if(window._contentTimer)return;window._contentTimer=setInterval(()=>loadCloudContent(),3600000);}
 function openCloud(){const c=cloudCfg();$('cloudOn').checked=!!c.enabled;$('cloudToken').value=c.token||'';$('cloudGist').value=c.gistId||'';cloudStat(c.enabled?'已连接':'未连接',c.enabled?'ok':'');$('cloudMask').classList.add('show');}
 function closeCloud(){$('cloudMask').classList.remove('show');}
 function startCloudTimer(){if(window._cloudTimer)return;window._cloudTimer=setInterval(()=>{if(cloudOn())cloudPull();},30000);}
@@ -361,7 +381,7 @@ async function saveCloud(){
   await cloudPush();
   if(cloudCfg().gistId) startCloudTimer();
 }
-async function syncNow(){const c=cloudCfg();if(!c.enabled||!c.token){cloudStat('请先启用并填写 Token','err');return;}cloudStat('同步中…','wait');await cloudPull();await cloudPush();}
+async function syncNow(){const c=cloudCfg();if(!c.enabled||!c.token){cloudStat('请先启用并填写 Token','err');return;}cloudStat('同步中…','wait');await cloudPull();await loadCloudContent();await cloudPush();}
 const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 const T=todayStr();
 $('today').textContent=T;
@@ -493,7 +513,7 @@ function addItem(key,t1,t2){
 }
 function delAdd(key,i){const add=JSON.parse(localStorage.getItem('wb_add_'+key)||'[]');add.splice(i,1);localStorage.setItem('wb_add_'+key,JSON.stringify(add));renderLists();}
 
-const GRAPHIC=[
+let GRAPHIC=[
  {p:"小红书",t:"松弛感 > 出片感",w:"年轻人不为摆拍硬凹，为『不赶时间不端架子』买单",d:"拍我们『瘫在天幕下发呆』的真实松弛图"},
  {p:"小红书",t:"公园20分钟效应",w:"席地而坐、装备越少心越自由，治愈回血话题暴涨",d:"做『不用带帐篷也能回血』系列"},
  {p:"抖音",t:"轻量化露营碾压精致",w:"后备箱只装三件东西，搬家式露营被抛弃",d:"拍我们『空手来』半日体验对比"},
@@ -505,7 +525,7 @@ const GRAPHIC=[
  {p:"小红书",t:"今昔对比 AI 短视频",w:"老照片→现在，时光流逝破防泪目",d:"做『营地第1天vs第100天』对比"},
  {p:"视频号",t:"AI 治愈系风景红利",w:"可抵达的治愈感击中25-35上班族",d:"我们日落江景调色做成治愈短片"}
 ];
-const VIDEO=[
+let VIDEO=[
  {p:"抖音",t:"帐篷搭建三必拍爆点",w:"地钉入土慢动作/撑杆弹起/挂串灯亮灯0.5倍速",d:"拍我们天幕搭建三连击"},
  {p:"抖音",t:"阳光+草地+美食野炊刷屏",w:"真实松弛，评论区一片『看饿了』",d:"拍我们野炊式出杯"},
  {p:"抖音",t:"黄金时段时间切片延时",w:"每15分钟固定机位，云海流动赞暴增3倍",d:"我们日落延时30秒"},
@@ -517,7 +537,7 @@ const VIDEO=[
  {p:"抖音",t:"江景日落延时天然滤镜",w:"水+山+落日=天然滤镜，下午4点拍",d:"拍我们江面鎏金时刻"},
  {p:"小红书",t:"新手手机电影感速成",w:"推-摇-跟运镜+4K30帧，零设备出片",d:"我们手机拍营地教学"}
 ];
-const COPY=[
+let COPY=[
  {p:"小红书",t:"黄金3秒钩子库",c:"①别再XX了！90%的人都做错 ②我以为…结果…（反差封神） ③只花X分钟，我搞定了XX ④被问爆了！这招我只说一次 ⑤同样是XX，为什么你没流量？"},
  {p:"抖音",t:"反常识破壁人",c:"『露营圈逻辑变了：不比装备，比谁离班味更远』——打破刻板印象+一线真相，轻幽默表达"},
  {p:"小红书",t:"可复制生活解法者",c:"『江边500㎡营地，我把它做成不赶时间的松弛据点』——具体问题+即时可用+结果感"},
@@ -527,7 +547,7 @@ const COPY=[
  {p:"抖音",t:"🌿营地适配2",c:"『9.9入场券是割韭菜吗？我把账本摊开给你看』——定价争议+透明账本，引评论区吵架=引流量"},
  {p:"视频号",t:"🌿营地适配3",c:"『逃离城市第N天：江边的风比老板的画饼实在』——情绪价值+地域IP，适合转发"}
 ];
-const TOPIC=[
+let TOPIC=[
  {p:"微信",t:"露营圈逻辑变了",c:"不比装备，比谁离『班味』更远",hook:"接：我们主打『松弛半日』，不劝你买装备"},
  {p:"抖音",t:"公园20分钟效应",c:"席地而坐治愈回血",hook:"接：江边坐会儿也是度假，发松弛图"},
  {p:"小红书",t:"轻量化vs搬家式",c:"争议讨论",hook:"接：我们空手来，装备焦虑退退退"},
@@ -536,7 +556,7 @@ const TOPIC=[
  {p:"视频号",t:"地域IP/江畔村晚",c:"地域流量",hook:"接：我们『蝴蝶谷』+乐队江边夜场蹭话题"},
  {p:"抖音",t:"AI治愈系风景红利",c:"可抵达的治愈感",hook:"接：我们日落江景做成治愈短片"}
 ];
-const TEAM=[
+let TEAM=[
  {p:"团建",t:"飞盘+露营（年轻人投票第一）",w:"规则简单上手快、零压力破冰、出片率高，00后说『这才是该玩的团建』",d:"我们半日包场+飞盘+柠檬茶，主打空手来"},
  {p:"团建",t:"创意手工+下午茶",w:"香薰蜡烛/流体熊/插花，边做边聊成品带走，女员工朋友圈刷三天",d:"接手冲柠檬茶体验+草编/流体熊DIY"},
  {p:"团建",t:"江畔露营+草地音乐会+篝火",w:"老洲乡『村晚+露营+音乐』模式，江边契合度高、氛围拉满",d:"用我们乐队资源做晚间专场，引B端复购"}
@@ -584,7 +604,8 @@ function importAll(e){
 /* init */
 (async function boot(){
   renderCourses();renderSop();renderLists();renderPriv();renderCustom(); // 先用本地数据秒出
-  if(cloudOn()){ await cloudPull(); startCloudTimer(); } // 再用云端覆盖，保持双端一致
+  if(cloudOn()){ await cloudPull(); startCloudTimer(); } // 云端覆盖用户数据，保持双端一致
+  await loadCloudContent(); startContentTimer(); // 拉取每日公开内容（无论是否启用云端同步）
 })();
 </script>
 </body>
