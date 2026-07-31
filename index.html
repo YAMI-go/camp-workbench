@@ -282,6 +282,7 @@ input,textarea,[contenteditable]{user-select:text;-webkit-user-select:text;}
 .pw-h{font-size:12.5px;font-weight:700;margin-bottom:4px;}
 .pw-g{font-size:12.5px;color:var(--txt);padding:2px 0;}
 .plan-tip{font-size:11px;color:var(--sub);background:#fff6ef;border-radius:9px;padding:8px 10px;margin-top:12px;line-height:1.5;}
+.plan-foot{display:flex;justify-content:center;margin-top:14px;}
 .sop-it:last-child{border-bottom:none;}
 .sop-it input[type=checkbox]{margin-top:3px;width:18px;height:18px;accent-color:var(--primary);flex-shrink:0;}
 .sop-it label{font-size:13px;cursor:pointer;flex:1;}
@@ -1440,6 +1441,25 @@ const COURSES=[
  {id:"ev1",b:"活动策划",c:"低频活动流水线",t:"策划1场团建并排期落地",src:"SOP",lock:true},
  {id:"ev2",b:"活动策划",c:"团建活动策划与执行",t:"对接1个B端团建需求并出方案",src:"抖音",lock:true}
 ];
+/* 系统课程专属拆解：每门课给出针对该课、循序渐进的小目标（不再用通用模板凑数） */
+const COURSE_PLAN={
+  cc1:['收藏近7天本地生活爆款图文10篇并打标签','拆解3篇高赞图文的封面/标题/正文结构','提炼可复用图文模板(开头钩子+信息密度)','模仿拍一条营地图文并带定位发布','对比数据优化下一篇选题'],
+  cc2:['梳理营地内容3类钩子(好奇/痛点/利益)','写5条黄金3秒钩子脚本','选1条实拍成片','发布并观察前30分钟完播与停留','复盘哪类钩子点击率高并迭代'],
+  cc3:['用三分法/引导线重拍江景机位','拍同一机位的清晨与日落对比','学基础调色参数统一风格','产出一组调色前后对比图','发布并收集反馈'],
+  cc4:['熟悉剪辑软件界面与基础操作','掌握3种常用转场效果','学会基础调色与风格统一','剪1条江边日落成片并配BGM','发布作品并观察完播数据'],
+  cc5:['拆解3篇同类爆款找共性结构','提炼可复用脚本公式','写出3条营地选题脚本','实拍/实写并发布1条','复盘数据优化下一轮'],
+  do1:['确定核心指标(播放/完播/涨粉)定义','搭建数据记录表模板','连续记录一周内容数据','做对比复盘找优劣','输出下周优化动作清单'],
+  do2:['理清团购曝光→点击→核销漏斗','看懂来客后台各看板含义','导出一周团购数据','算曝光到核销转化率','找出可优化环节并提方案'],
+  do3:['理解4个渠道码各自的归因逻辑','导出核销台账并清洗数据','按渠道码拆分核销数量','计算各码转化率并排序','形成渠道效果周报'],
+  pr1:['梳理用户分层与活跃场景','设计3套促活话术模板','本周发起1次接龙/投票','观察互动数据并迭代话术','沉淀可复用的促活SOP'],
+  pr2:['理清优惠券发放到核销流程','配置优惠券与核销台规则','用核销台完成10单登记','核对核销数据无误','形成标准核销SOP文档'],
+  pr3:['明确裂变目标人群与诱饵','设计1个老带新钩子(利益/稀缺)','制作落地物料与话术','小范围测试并跟踪拉新数','复盘转化率后放大'],
+  ip1:['明确人设标签与受众定位','写一句话人设定位卡','设计内容栏目规划','发布「第N天」连载第1期','复盘人设反馈再校准'],
+  ip2:['确定账本要透明呈现的维度','设计账本模板(收入/成本/利润)','连续记录并发布1周账本','观察账本内容的涨粉与互动','优化账本呈现形式'],
+  ip3:['学B站IP定位课提炼方法','明确自身差异化定位','写个人IP定位卡','规划内容栏目与更新节奏','发布定位说明帖测试反馈'],
+  ev1:['明确活动目标与参与人群','设计活动流程与玩法','排出时间表与物料清单','对接/落地执行一场团建','复盘效果沉淀活动模板'],
+  ev2:['梳理B端团建需求清单','设计团建方案框架(主题/流程/报价)','完成1份可提案的方案','对接客户并收集反馈','优化方案形成标准模板']
+};
 const BRANCH_COLOR={"内容创作":"#ff8a65","数据运营":"#5bbd95","私域转化":"#ffb3cf","IP打造":"#ffd98a","活动策划":"#b39ddb"};
 function polar(cx,cy,r,ang){const a=ang*Math.PI/180;return [cx+r*Math.sin(a),cy-r*Math.cos(a)];}
 function annularSector(cx,cy,ri,ro,a0,a1){
@@ -1552,14 +1572,10 @@ const PLAN_RULES=[
   {kw:['活动','团建','策划','流水线','排期'],g:['明确活动目标与人群','设计流程与玩法','排出时间表与物料清单','对接/落地执行','复盘效果沉淀模板']}
 ];
 function decomposeCourse(c){
+  if(COURSE_PLAN[c.id]&&COURSE_PLAN[c.id].length)return COURSE_PLAN[c.id].slice();
   const txt=(c.c||'')+(c.t||'')+(c.b||'');
-  let g=null;
-  for(const r of PLAN_RULES){if(r.kw.some(k=>txt.indexOf(k)>=0)){g=r.g;break;}}
-  if(!g)g=['理解课程核心概念','完成1次动手练习','产出1份小作业','应用到营地实际场景','复盘并迭代优化'];
-  const out=[];
-  if(c.t)out.push('入门任务：'+c.t);
-  g.forEach(x=>out.push(x));
-  return out;
+  for(const r of PLAN_RULES){if(r.kw.some(k=>txt.indexOf(k)>=0))return r.g.slice();}
+  return ['理解课程核心概念并列出3个要点','完成1次动手练习','产出1份小作业','应用到营地实际场景','复盘并迭代优化'];
 }
 function fmtDate(d){return (d.getMonth()+1)+'月'+d.getDate()+'日';}
 function buildPlan(goals){
@@ -1570,10 +1586,10 @@ function buildPlan(goals){
     return {label:`第${wi+1}周 · 约${fmtDate(d)}起`,goals:ws};
   });
 }
-function openPlan(id){
+function openPlan(id,force){
   const c=getCourses().find(x=>x.id===id);if(!c){alert('课程不存在');return;}
   const store=JSON.parse(localStorage.getItem('wb_plan')||'{}');
-  if(!store[id])store[id]={goals:decomposeCourse(c).map(t=>({t,done:false}))};
+  if(force||!store[id])store[id]={goals:decomposeCourse(c).map(t=>({t,done:false}))};
   const goals=store[id].goals;
   const weeks=buildPlan(goals.map(g=>g.t));
   const doneN=goals.filter(g=>g.done).length;
@@ -1583,7 +1599,8 @@ function openPlan(id){
     `</div>`;
   html+=`<div class="plan-sec">📅 推荐学习计划（每周约2个小目标，从今天起排期）</div>`;
   html+=weeks.map(w=>`<div class="plan-wk"><div class="pw-h">${w.label}</div>`+w.goals.map(g=>`<div class="pw-g">· ${esc(g)}</div>`).join('')+`</div>`).join('');
-  html+=`<div class="plan-tip">💡 系统已按课程方向自动识别并拆解，可逐周推进；进度自动保存到本地与云端。</div>`;
+  html+=`<div class="plan-tip">💡 系统已按课程方向自动拆解，可逐周推进；进度自动保存到本地与云端。</div>`;
+  html+=`<div class="plan-foot"><button class="btn ghost" onclick="openPlan('${c.id}',true)">🔄 重新拆解（重置进度）</button></div>`;
   $('planBody').innerHTML=html;
   $('planTitle').textContent='🧠 智能学习计划';
   $('planModal').classList.add('show');
