@@ -1,4 +1,4 @@
-const CACHE = 'camp-wb-v1';
+const CACHE = 'camp-wb-v2';
 const APP_SHELL = [
   './',
   './index.html',
@@ -27,13 +27,12 @@ self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
 
-  // 页面导航：先网络，失败回退缓存（保证离线也能开）
+  // 页面导航：强制回源(绕过 GitHub Pages/CDN 缓存)拿最新 index.html，离线则回退缓存
   if (req.mode === 'navigate') {
     e.respondWith(
-      fetch(req)
+      fetch(req.url, {cache:'reload'})
         .then((r) => {
-          const cp = r.clone();
-          caches.open(CACHE).then((c) => c.put('./', cp));
+          if (r.ok) { const cp = r.clone(); caches.open(CACHE).then((c) => c.put('./', cp)); }
           return r;
         })
         .catch(() => caches.match('./').then((r) => r || caches.match('./index.html')))

@@ -2327,7 +2327,7 @@ function showMoreMenu(){
   </div>
 </div>
 <script>
-if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){console.log('SW 注册失败（不影响使用）');});});}
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').then(function(reg){reg.update();}).catch(function(){console.log('SW 注册失败（不影响使用）');});});}
 /* 全局外链拦截：App(PWA)内点外部链接 → 弹 App 内「外部链接」卡片，绝不真正离开 App（避免被系统踢回主屏） */
 document.addEventListener('click',function(ev){
   var a=ev.target.closest?ev.target.closest('a[href]'):null;
