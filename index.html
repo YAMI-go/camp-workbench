@@ -2344,13 +2344,13 @@ function openExternal(url,label){
   var host='';try{host=new URL(url).hostname;}catch(e){}
   var lab=(label&&label!=='外部链接')?label:(host||'外部链接');
   $('extSite').textContent=lab;
-  var uu=$('extUrl');uu.textContent=url;uu.setAttribute('data-url',url);
+  var uu=$('extUrl');try{uu.textContent=decodeURIComponent(url);}catch(e){uu.textContent=url;}uu.setAttribute('data-url',url);
   $('extModal').classList.add('show');document.body.style.overflow='hidden';
   window.__extUrl=url;
 }
 function closeExt(){$('extModal').classList.remove('show');document.body.style.overflow='';}
-function extOpen(){var u=window.__extUrl||'';if(!u)return;var w=window.open(u,'_blank','noopener');if(!w){location.href=u;}}
-function extCopy(){copyText(encodeURIComponent(window.__extUrl||''));}
+function extOpen(){var u=window.__extUrl||'';if(!u)return;var ok=false;try{var w=window.open(u,'_blank','noopener');if(w)ok=true;}catch(e){}if(!ok){try{var a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();document.body.removeChild(a);ok=true;}catch(e){}}if(!ok){alert('⚠️ 系统限制了自动打开浏览器\n\n请先点「复制链接」，再手动粘贴到手机浏览器打开');}}
+function extCopy(){var u=window.__extUrl||'';if(!u)return;var ok=false;if(navigator.clipboard&&navigator.clipboard.writeText){try{navigator.clipboard.writeText(u).then(function(){ok=true;});}catch(e){}}if(!ok){try{var ta=document.createElement('textarea');ta.value=u;ta.style.cssText='position:fixed;left:-9999px;top:-9999px;opacity:0';document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,99999);ok=document.execCommand('copy');document.body.removeChild(ta);}catch(e){}}var btn=document.querySelector('#extModal .btn.ghost');if(ok){if(btn)btn.textContent='✅ 已复制';setTimeout(function(){if(btn)btn.textContent='📋 复制链接';},2000);}else{alert('自动复制失败\n请长按下方链接手动复制:\n'+u);}}
 </script>
 
 <div class="modal-mask" id="extModal" onclick="if(event.target===this)closeExt()">
